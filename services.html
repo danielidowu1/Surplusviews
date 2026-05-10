@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Services — Surplusviews Global Limited</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-hero {
+      background: var(--navy);
+      padding: 5rem 5% 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(240,192,64,.03) 0px,
+        rgba(240,192,64,.03) 1px,
+        transparent 1px,
+        transparent 40px
+      );
+      pointer-events: none;
+    }
+    .page-hero h1 { color: var(--white); font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: .8rem; }
+    .page-hero p  { color: rgba(255,255,255,.7); max-width: 560px; margin: 0 auto; font-size: 1.05rem; }
+    .breadcrumb {
+      display: flex;
+      justify-content: center;
+      gap: .4rem;
+      font-size: .8rem;
+      color: rgba(255,255,255,.45);
+      margin-bottom: 1.5rem;
+    }
+    .breadcrumb a { color: var(--gold); }
+
+    /* SERVICE BLOCKS */
+    .svc-block {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 3.5rem;
+      align-items: start;
+      padding: 4rem 5%;
+      border-bottom: 1px solid var(--border);
+    }
+    .svc-block:last-child { border-bottom: none; }
+    .svc-block.reverse { direction: rtl; }
+    .svc-block.reverse > * { direction: ltr; }
+
+    .svc-block-icon-wrap {
+      background: var(--navy);
+      border-radius: var(--r-lg);
+      padding: 3rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .svc-block-icon-wrap::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(240,192,64,.08);
+    }
+    .svc-block-icon { font-size: 4rem; margin-bottom: 1.2rem; display: block; }
+    .svc-block-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      font-weight: 700;
+      color: rgba(240,192,64,.15);
+      line-height: 1;
+      margin-bottom: .5rem;
+    }
+    .svc-block-name {
+      color: var(--white);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .svc-block-content h2 {
+      font-size: 1.9rem;
+      color: var(--navy);
+      margin-bottom: 1rem;
+    }
+    .svc-block-content p {
+      color: var(--muted);
+      font-size: .95rem;
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+
+    .svc-sub-list { list-style: none; margin-bottom: 2rem; }
+    .svc-sub-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: .9rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .svc-sub-list li:last-child { border-bottom: none; }
+    .svc-sub-icon {
+      width: 36px; height: 36px;
+      background: rgba(240,192,64,.15);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .svc-sub-text h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: .25rem;
+    }
+    .svc-sub-text p { font-size: .84rem; color: var(--muted); margin: 0; }
+
+    /* PRICING HINT */
+    .price-hint {
+      background: var(--cream);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--r) var(--r) 0;
+      padding: 1rem 1.4rem;
+      font-size: .88rem;
+      color: var(--muted);
+      margin-top: .5rem;
+    }
+    .price-hint strong { color: var(--navy); }
+
+    @media (max-width: 860px) {
+      .svc-block, .svc-block.reverse { grid-template-columns: 1fr; direction: ltr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-badge">SV</div>
+    <div class="logo-text">
+      <span class="logo-name">Surplusviews Global</span>
+      <span class="logo-tagline">Consulting</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="order.html" class="nav-cta">Get Started</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Open menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <a href="index.html">Home</a>
+  <a href="services.html"  class="active">Services</a>
+  <a href="blog.html">Blog</a>
+  <a href="about.html">About</a>
+  <a href="order.html" class="drawer-cta">Get Started</a>
+</div>
+<script>
+function toggleMenu() {
+  var btn    = document.getElementById('hamburger');
+  var drawer = document.getElementById('navDrawer');
+  btn.classList.toggle('open');
+  drawer.classList.toggle('open');
+  document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+}
+document.querySelectorAll('.nav-drawer a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('navDrawer').classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
+</script>
+
+<div class="page-hero">
+  <div class="breadcrumb"><a href="index.html">Home</a> / <span>Services</span></div>
+  <h1>Our Services</h1>
+  <p>End-to-end research, advisory, and consulting solutions — designed for individuals, students, and organisations.</p>
+</div>
+
+<!-- SERVICE 1 -->
+<div class="svc-block fade-up">
+  <div class="svc-block-icon-wrap">
+    <div class="svc-block-num">01</div>
+    <span class="svc-block-icon">📚</span>
+    <div class="svc-block-name">Research &amp; Academic Support</div>
+  </div>
+  <div class="svc-block-content">
+    <h2>Research &amp; Academic Support Service</h2>
+    <p>Whether you are an undergraduate crafting your first research paper or a postgraduate working on a doctoral thesis, we provide the rigorous academic support you need to succeed. Our team of experienced researchers and writers guide you through every stage of the process.</p>
+    <ul class="svc-sub-list">
+      <li>
+        <div class="svc-sub-icon">✍️</div>
+        <div class="svc-sub-text">
+          <h4>Project / Thesis Writing</h4>
+          <p>Full-cycle thesis and research project development — from literature review to final defence preparation.</p>
+        </div>
+      </li>
+      <li>
+        <div class="svc-sub-icon">📋</div>
+        <div class="svc-sub-text">
+          <h4>Data Collection &amp; Field Survey as a Service</h4>
+          <p>Structured field surveys, questionnaire design, and quantitative/qualitative data collection on your behalf.</p>
+        </div>
+      </li>
+    </ul>
+    <a href="order.html" class="btn btn-primary">Request This Service</a>
+  </div>
+</div>
+
+<!-- SERVICE 2 -->
+<div class="svc-block reverse fade-up section-alt">
+  <div class="svc-block-icon-wrap" style="background: #0f2a6e;">
+    <div class="svc-block-num">02</div>
+    <span class="svc-block-icon">🎓</span>
+    <div class="svc-block-name">Student &amp; Career Advisory</div>
+  </div>
+  <div class="svc-block-content">
+    <h2>Student / Career Advisory Services</h2>
+    <p>Navigating your academic or professional future should not be a guessing game. Our advisors bring firsthand experience to help you make informed, confident decisions — from choosing the right scholarship to building a compelling career profile.</p>
+    <ul class="svc-sub-list">
+      <li>
+        <div class="svc-sub-icon">🏆</div>
+        <div class="svc-sub-text">
+          <h4>Scholarship Application Support</h4>
+          <p>End-to-end guidance: scholarship identification, essay writing, document preparation, and submission strategy.</p>
+        </div>
+      </li>
+      <li>
+        <div class="svc-sub-icon">🗺️</div>
+        <div class="svc-sub-text">
+          <h4>Career Path Counselling</h4>
+          <p>Personalised career mapping, CV/résumé building, interview coaching, and professional branding.</p>
+        </div>
+      </li>
+    </ul>
+    <a href="order.html" class="btn btn-primary">Request This Service</a>
+  </div>
+</div>
+
+<!-- SERVICE 3 -->
+<div class="svc-block fade-up">
+  <div class="svc-block-icon-wrap" style="background: #091642;">
+    <div class="svc-block-num">03</div>
+    <span class="svc-block-icon">🏭</span>
+    <div class="svc-block-name">Corporate Research</div>
+  </div>
+  <div class="svc-block-content">
+    <h2>Corporate / Industry Research Support Services</h2>
+    <p>In today's competitive landscape, data is a strategic advantage. We provide businesses with the market intelligence they need to make informed decisions, understand competitors, and identify growth opportunities across Nigerian and African markets.</p>
+    <ul class="svc-sub-list">
+      <li>
+        <div class="svc-sub-icon">📊</div>
+        <div class="svc-sub-text">
+          <h4>Market &amp; Industry Analysis</h4>
+          <p>Comprehensive market sizing, trend analysis, competitive mapping, and consumer insight reports.</p>
+        </div>
+      </li>
+      <li>
+        <div class="svc-sub-icon">📈</div>
+        <div class="svc-sub-text">
+          <h4>Business Intelligence Reports</h4>
+          <p>Custom research briefs and industry profiles to support executive decision-making and investor presentations.</p>
+        </div>
+      </li>
+    </ul>
+    <a href="order.html" class="btn btn-primary">Request This Service</a>
+  </div>
+</div>
+
+<!-- SERVICE 4 -->
+<div class="svc-block reverse fade-up section-alt">
+  <div class="svc-block-icon-wrap" style="background: #12195e;">
+    <div class="svc-block-num">04</div>
+    <span class="svc-block-icon">📜</span>
+    <div class="svc-block-name">Policy Research</div>
+  </div>
+  <div class="svc-block-content">
+    <h2>Policy / Development Research</h2>
+    <p>Sound policy requires rigorous evidence. We support governments, NGOs, and development agencies with research that informs better decision-making and drives meaningful social change across Africa.</p>
+    <ul class="svc-sub-list">
+      <li>
+        <div class="svc-sub-icon">🌍</div>
+        <div class="svc-sub-text">
+          <h4>Social Impact Assessments</h4>
+          <p>Structured evaluation of the social, economic, and environmental effects of projects and policies.</p>
+        </div>
+      </li>
+      <li>
+        <div class="svc-sub-icon">📑</div>
+        <div class="svc-sub-text">
+          <h4>Programme Evaluation &amp; Policy Briefs</h4>
+          <p>Evidence-based evaluation reports and policy briefs for development organisations and public institutions.</p>
+        </div>
+      </li>
+    </ul>
+    <a href="order.html" class="btn btn-primary">Request This Service</a>
+  </div>
+</div>
+
+<!-- SERVICE 5 -->
+<div class="svc-block fade-up">
+  <div class="svc-block-icon-wrap" style="background: #0d1a5a;">
+    <div class="svc-block-num">05</div>
+    <span class="svc-block-icon">🏋️</span>
+    <div class="svc-block-name">Training &amp; Capacity</div>
+  </div>
+  <div class="svc-block-content">
+    <h2>Training / Capacity Building</h2>
+    <p>We believe in empowering people with knowledge and skills. Our training programmes are tailored for teams, institutions, and individuals who want to build lasting research, analytical, and professional competencies.</p>
+    <ul class="svc-sub-list">
+      <li>
+        <div class="svc-sub-icon">🧑‍🏫</div>
+        <div class="svc-sub-text">
+          <h4>Workshops &amp; Seminars</h4>
+          <p>Interactive sessions on research methods, data analysis, academic writing, and professional skills.</p>
+        </div>
+      </li>
+      <li>
+        <div class="svc-sub-icon">💡</div>
+        <div class="svc-sub-text">
+          <h4>Organisational Capacity Development</h4>
+          <p>Custom training programmes for organisations looking to strengthen internal research and analytical capabilities.</p>
+        </div>
+      </li>
+    </ul>
+    <a href="order.html" class="btn btn-primary">Request This Service</a>
+  </div>
+</div>
+
+<!-- BOTTOM CTA -->
+<section class="section" style="text-align:center;">
+  <div class="gold-rule" style="margin: 0 auto 1rem;"></div>
+  <h2 class="section-title" style="max-width:100%;">Not Sure Which Service You Need?</h2>
+  <p style="color:var(--muted); margin-bottom:2rem;">Fill out our short intake form and we'll recommend the best solution for your situation.</p>
+  <a href="order.html" class="btn btn-primary">Tell Us What You Need</a>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-badge">SV</div>
+        <div class="logo-text">
+          <span class="logo-name">Surplusviews Global</span>
+          <span class="logo-tagline">Consulting</span>
+        </div>
+      </div>
+      <p class="footer-desc">Simple, Easy and Smart — delivering research, advisory, and consulting services across Nigeria and beyond.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="order.html">Get Started</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item"><span class="footer-contact-icon">📞</span><span>08033912203 / 0916 490 7691</span></div>
+      <div class="footer-contact-item"><span class="footer-contact-icon">✉️</span><span>surplusviewsglobal@gmail.com</span></div>
+      <div class="footer-contact-item"><span class="footer-contact-icon">🌐</span><span>www.surplusviewsglobal.com</span></div>
+      <div class="footer-contact-item"><span class="footer-contact-icon">📍</span><span>Lagos, Nigeria</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Surplusviews Global Limited. All rights reserved.</span>
+    <span class="tagline-footer">Simple, Easy and Smart...</span>
+  </div>
+</footer>
+
+</body>
+</html>

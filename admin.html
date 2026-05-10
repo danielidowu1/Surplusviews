@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — Surplusviews Global</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:      #0d1f6e;
+      --navy-deep: #081248;
+      --gold:      #f0c040;
+      --gold-muted:#c9a535;
+      --cream:     #faf8f2;
+      --sidebar:   #0f1e5c;
+      --white:     #ffffff;
+      --text:      #12122a;
+      --muted:     #5c5c80;
+      --border:    #e4e0d4;
+      --danger:    #c0392b;
+      --success:   #1a6e40;
+      --r:         8px;
+      --r-lg:      14px;
+    }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: #f0f0f5;
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN OVERLAY ── */
+    #loginOverlay {
+      position: fixed; inset: 0;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    .login-box {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      width: 360px;
+      text-align: center;
+    }
+    .login-logo {
+      width: 56px; height: 56px;
+      background: var(--navy);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin: 0 auto 1.2rem;
+    }
+    .login-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      color: var(--navy);
+      margin-bottom: .3rem;
+    }
+    .login-box p { font-size: .85rem; color: var(--muted); margin-bottom: 1.8rem; }
+    .login-box input {
+      width: 100%;
+      padding: .7rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--r);
+      font-family: 'Outfit', sans-serif;
+      font-size: .95rem;
+      margin-bottom: 1rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .login-box input:focus { border-color: var(--navy); }
+    .login-btn {
+      width: 100%;
+      padding: .75rem;
+      background: var(--gold);
+      color: var(--navy);
+      border: none;
+      border-radius: var(--r);
+      font-weight: 700;
+      font-size: .95rem;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .login-btn:hover { background: #ffd55a; }
+    .login-err { font-size: .82rem; color: var(--danger); margin-top: .5rem; display: none; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 240px;
+      background: var(--navy-deep);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      min-height: 100vh;
+    }
+    .sidebar-brand {
+      padding: 1.5rem 1.2rem;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .sb-badge {
+      width: 36px; height: 36px;
+      background: var(--gold);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--navy);
+    }
+    .sb-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+    }
+    .sb-sub { font-size: .62rem; color: var(--gold); text-transform: uppercase; letter-spacing: .1em; }
+
+    .sb-section {
+      font-size: .65rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      padding: 1.4rem 1.2rem .5rem;
+    }
+
+    .sb-link {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      padding: .65rem 1.2rem;
+      font-size: .88rem;
+      color: rgba(255,255,255,.65);
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all .18s;
+      text-decoration: none;
+    }
+    .sb-link:hover { color: var(--white); background: rgba(255,255,255,.05); }
+    .sb-link.active { color: var(--white); background: rgba(240,192,64,.1); border-left-color: var(--gold); }
+    .sb-icon { font-size: 1.1rem; }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 1.2rem;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .visit-site {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .82rem;
+      color: var(--gold);
+      text-decoration: none;
+      transition: opacity .2s;
+    }
+    .visit-site:hover { opacity: .75; }
+
+    /* ── MAIN ── */
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topbar-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .topbar-right { display: flex; align-items: center; gap: 1rem; }
+    .admin-badge {
+      background: rgba(13,31,110,.08);
+      color: var(--navy);
+      font-size: .78rem;
+      font-weight: 600;
+      padding: .3rem .8rem;
+      border-radius: 20px;
+    }
+
+    .content { flex: 1; padding: 2rem; overflow-y: auto; }
+
+    /* ── PANELS ── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── STAT CARDS ── */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      padding: 1.4rem 1.2rem;
+      border: 1px solid var(--border);
+    }
+    .stat-card-label { font-size: .75rem; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .5rem; }
+    .stat-card-num { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 700; color: var(--navy); line-height: 1; }
+    .stat-card-sub { font-size: .78rem; color: var(--muted); margin-top: .25rem; }
+
+    /* ── CARD ── */
+    .admin-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .admin-card-header {
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .admin-card-header h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: var(--navy);
+    }
+    .admin-card-body { padding: 1.5rem; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 1.2rem; }
+    label { display: block; font-size: .84rem; font-weight: 500; color: var(--text); margin-bottom: .4rem; }
+    input[type=text], input[type=date], input[type=number], input[type=password],
+    select, textarea {
+      width: 100%;
+      padding: .65rem .9rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--r);
+      font-family: 'Outfit', sans-serif;
+      font-size: .9rem;
+      color: var(--text);
+      background: var(--white);
+      outline: none;
+      transition: border-color .2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--navy); }
+    textarea { resize: vertical; min-height: 100px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .6rem 1.3rem;
+      border-radius: var(--r);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: .88rem;
+      cursor: pointer;
+      border: none;
+      transition: all .18s;
+    }
+    .btn-primary { background: var(--gold); color: var(--navy); }
+    .btn-primary:hover { background: #ffd55a; }
+    .btn-navy { background: var(--navy); color: var(--white); }
+    .btn-navy:hover { background: #1a2f9e; }
+    .btn-danger { background: #fdecea; color: var(--danger); border: 1px solid #f5b0ab; }
+    .btn-danger:hover { background: #fbd5d3; }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--navy); color: var(--navy); }
+    .btn-sm { padding: .35rem .8rem; font-size: .8rem; }
+    .btn-success { background: #e8f8f0; color: var(--success); border: 1px solid #a8e6c5; }
+    .btn-success:hover { background: #d0f0e0; }
+
+    /* ── TABLE ── */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th {
+      text-align: left;
+      font-size: .75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      padding: .6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: #fafafa;
+    }
+    .data-table td {
+      padding: .9rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: .88rem;
+      vertical-align: middle;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: #fafafa; }
+
+    .badge {
+      display: inline-block;
+      padding: .2rem .65rem;
+      border-radius: 20px;
+      font-size: .72rem;
+      font-weight: 600;
+    }
+    .badge-published { background: #e8f8f0; color: var(--success); }
+    .badge-draft     { background: #f5f5f5; color: var(--muted); }
+    .badge-featured  { background: rgba(240,192,64,.2); color: #9a7800; }
+
+    .td-actions { display: flex; gap: .4rem; }
+
+    /* ── MODAL ── */
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(8,18,72,.55);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    }
+    .modal-header {
+      padding: 1.3rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--white);
+      z-index: 1;
+    }
+    .modal-header h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--navy); }
+    .modal-close {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      transition: background .15s;
+    }
+    .modal-close:hover { background: #ebe8dc; }
+    .modal-body { padding: 1.5rem; }
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: .7rem;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      background: var(--navy);
+      color: var(--white);
+      padding: .8rem 1.4rem;
+      border-radius: var(--r);
+      font-size: .88rem;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all .3s;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* SWITCH */
+    .switch-wrap { display: flex; align-items: center; gap: .7rem; margin-top: .3rem; }
+    .switch {
+      position: relative;
+      width: 42px; height: 24px;
+      flex-shrink: 0;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch-slider {
+      position: absolute; inset: 0;
+      background: var(--border);
+      border-radius: 24px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .switch-slider::before {
+      content: '';
+      position: absolute;
+      width: 18px; height: 18px;
+      left: 3px; top: 3px;
+      background: var(--white);
+      border-radius: 50%;
+      transition: transform .2s;
+    }
+    .switch input:checked + .switch-slider { background: var(--navy); }
+    .switch input:checked + .switch-slider::before { transform: translateX(18px); }
+    .switch-label { font-size: .85rem; color: var(--muted); }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--muted);
+    }
+    .empty-state-icon { font-size: 2.5rem; margin-bottom: .8rem; }
+    .empty-state p { font-size: .9rem; }
+
+    /* STAR PICKER */
+    .star-picker { display: flex; gap: .3rem; margin-top: .3rem; }
+    .star-picker span {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--border);
+      transition: color .15s;
+    }
+    .star-picker span.active { color: var(--gold); }
+
+    /* RICH TEXT AREA */
+    .rich-toolbar {
+      display: flex;
+      gap: .3rem;
+      padding: .5rem;
+      background: #fafafa;
+      border: 1.5px solid var(--border);
+      border-bottom: none;
+      border-radius: var(--r) var(--r) 0 0;
+    }
+    .rich-toolbar button {
+      padding: .3rem .6rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: .85rem;
+      color: var(--muted);
+      font-family: 'Outfit', sans-serif;
+      transition: background .15s;
+    }
+    .rich-toolbar button:hover { background: var(--border); color: var(--text); }
+    .rich-editor {
+      min-height: 160px;
+      border: 1.5px solid var(--border);
+      border-radius: 0 0 var(--r) var(--r);
+      padding: .8rem 1rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: .9rem;
+      outline: none;
+      line-height: 1.7;
+    }
+    .rich-editor:focus { border-color: var(--navy); }
+
+    /* CONFIRM DIALOG */
+    .confirm-msg { font-size: .95rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginOverlay">
+  <div class="login-box">
+    <div class="login-logo">SV</div>
+    <h2>Admin Panel</h2>
+    <p>Sign in to manage blog posts and reviews</p>
+    <input type="text" id="loginUser" placeholder="Username" autocomplete="off" />
+    <input type="password" id="loginPass" placeholder="Password" />
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <p class="login-err" id="loginErr">Incorrect credentials. Please try again.</p>
+    <p style="font-size:.75rem;color:var(--muted);margin-top:1.2rem;">Default: admin / surplusviews2025</p>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="sb-logo">
+      <div class="sb-badge">SV</div>
+      <div>
+        <div class="sb-name">Surplusviews</div>
+        <div class="sb-sub">Admin Panel</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sb-section">Content</div>
+  <div class="sb-link active" onclick="showPanel('dashboard')" id="nav-dashboard">
+    <span class="sb-icon">📊</span> Dashboard
+  </div>
+  <div class="sb-link" onclick="showPanel('posts')" id="nav-posts">
+    <span class="sb-icon">📝</span> Blog Posts
+  </div>
+  <div class="sb-link" onclick="showPanel('reviews')" id="nav-reviews">
+    <span class="sb-icon">⭐</span> Reviews
+  </div>
+
+  <div class="sb-section">Settings</div>
+  <div class="sb-link" onclick="showPanel('settings')" id="nav-settings">
+    <span class="sb-icon">⚙️</span> Settings
+  </div>
+
+  <div class="sidebar-footer">
+    <a href="index.html" target="_blank" class="visit-site">↗ View Live Site</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    <div class="topbar-right">
+      <span class="admin-badge">Admin</span>
+      <button class="btn btn-ghost btn-sm" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="stat-row" id="dashStats"></div>
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>Recent Blog Posts</h3>
+          <button class="btn btn-primary btn-sm" onclick="showPanel('posts'); openPostModal()">+ New Post</button>
+        </div>
+        <div class="admin-card-body" style="padding:0;">
+          <table class="data-table" id="dashPostsTable">
+            <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>Recent Reviews</h3>
+          <button class="btn btn-primary btn-sm" onclick="showPanel('reviews'); openReviewModal()">+ Add Review</button>
+        </div>
+        <div class="admin-card-body" style="padding:0;">
+          <table class="data-table" id="dashReviewsTable">
+            <thead><tr><th>Name</th><th>Role</th><th>Stars</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOG POSTS -->
+    <div class="panel" id="panel-posts">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+        <div>
+          <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--navy);">Blog Posts</h2>
+          <p style="font-size:.85rem;color:var(--muted);margin-top:.2rem;">Create and manage articles shown on the website</p>
+        </div>
+        <button class="btn btn-primary" onclick="openPostModal()">+ New Post</button>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header" style="gap:1rem;flex-wrap:wrap;">
+          <div style="display:flex;gap:.5rem;flex:1;min-width:200px;">
+            <input type="text" id="postSearch" placeholder="Search posts..." style="max-width:280px;" oninput="renderPostsTable()" />
+          </div>
+          <select id="postFilterCat" style="width:auto;" onchange="renderPostsTable()">
+            <option value="">All Categories</option>
+            <option>Career Advisory</option><option>Research</option><option>Market Intel</option><option>Policy</option><option>Training</option>
+          </select>
+        </div>
+        <div style="padding:0;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="postsTableBody"></tbody>
+          </table>
+          <div id="postsEmpty" class="empty-state" style="display:none;">
+            <div class="empty-state-icon">📝</div>
+            <p>No posts yet. Create your first blog post!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="panel" id="panel-reviews">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+        <div>
+          <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--navy);">Client Reviews</h2>
+          <p style="font-size:.85rem;color:var(--muted);margin-top:.2rem;">Manage testimonials displayed on the homepage</p>
+        </div>
+        <button class="btn btn-primary" onclick="openReviewModal()">+ Add Review</button>
+      </div>
+
+      <div class="admin-card">
+        <div style="padding:0;">
+          <table class="data-table">
+            <thead>
+              <tr><th>Client</th><th>Role</th><th>Stars</th><th>Preview</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="reviewsTableBody"></tbody>
+          </table>
+          <div id="reviewsEmpty" class="empty-state" style="display:none;">
+            <div class="empty-state-icon">⭐</div>
+            <p>No reviews yet. Add your first client testimonial!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="panel" id="panel-settings">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--navy);margin-bottom:1.5rem;">Settings</h2>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>Change Admin Password</h3></div>
+        <div class="admin-card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Current Password</label>
+              <input type="password" id="currPw" />
+            </div>
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" id="newPw" />
+            </div>
+          </div>
+          <button class="btn btn-navy" onclick="changePw()">Update Password</button>
+        </div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>Data Management</h3></div>
+        <div class="admin-card-body" style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <button class="btn btn-ghost" onclick="exportData()">⬇ Export All Data (JSON)</button>
+          <button class="btn btn-danger" onclick="confirmReset()">🗑 Reset All Data to Defaults</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- POST MODAL -->
+<div class="modal-backdrop" id="postModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="postModalTitle">New Blog Post</h3>
+      <button class="modal-close" onclick="closePostModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="postId" value="" />
+
+      <div class="form-group">
+        <label>Post Title *</label>
+        <input type="text" id="postTitle" placeholder="Enter a compelling title..." />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="postCategory">
+            <option value="" disabled selected>Select category</option>
+            <option>Career Advisory</option>
+            <option>Research</option>
+            <option>Market Intel</option>
+            <option>Policy</option>
+            <option>Training</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Publication Date *</label>
+          <input type="date" id="postDate" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Read Time (minutes)</label>
+          <input type="number" id="postReadTime" min="1" max="60" value="5" />
+        </div>
+        <div class="form-group">
+          <label>Author</label>
+          <input type="text" id="postAuthor" placeholder="e.g. Surplusviews Team" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Excerpt / Summary *</label>
+        <textarea id="postExcerpt" rows="3" placeholder="A short 1-2 sentence summary shown on the homepage and blog listing..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Full Article Body</label>
+        <div class="rich-toolbar">
+          <button onclick="fmt('bold')"><strong>B</strong></button>
+          <button onclick="fmt('italic')"><em>I</em></button>
+          <button onclick="fmt('underline')"><u>U</u></button>
+          <button onclick="fmtH2()">H2</button>
+          <button onclick="fmtH3()">H3</button>
+          <button onclick="fmt('insertUnorderedList')">• List</button>
+          <button onclick="fmt('insertOrderedList')">1. List</button>
+        </div>
+        <div class="rich-editor" id="postBody" contenteditable="true" spellcheck="true"></div>
+      </div>
+
+      <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:.5rem;">
+        <label class="switch-wrap">
+          <div class="switch"><input type="checkbox" id="postPublished" checked /><span class="switch-slider"></span></div>
+          <span class="switch-label">Published (visible on site)</span>
+        </label>
+        <label class="switch-wrap">
+          <div class="switch"><input type="checkbox" id="postFeatured" /><span class="switch-slider"></span></div>
+          <span class="switch-label">Featured post (homepage spotlight)</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closePostModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="savePost()">Save Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal-backdrop" id="reviewModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="reviewModalTitle">Add Client Review</h3>
+      <button class="modal-close" onclick="closeReviewModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="reviewId" value="" />
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Client Name *</label>
+          <input type="text" id="reviewName" placeholder="e.g. Adaeze O." />
+        </div>
+        <div class="form-group">
+          <label>Role / Description *</label>
+          <input type="text" id="reviewRole" placeholder="e.g. MSc Student, University of Lagos" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Star Rating *</label>
+        <div class="star-picker" id="starPicker">
+          <span onclick="setStar(1)">★</span>
+          <span onclick="setStar(2)">★</span>
+          <span onclick="setStar(3)">★</span>
+          <span onclick="setStar(4)">★</span>
+          <span onclick="setStar(5)">★</span>
+        </div>
+        <input type="hidden" id="reviewStars" value="5" />
+      </div>
+
+      <div class="form-group">
+        <label>Review Text *</label>
+        <textarea id="reviewText" rows="4" placeholder="What the client said about working with Surplusviews..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Service Used</label>
+        <select id="reviewService">
+          <option value="">Not specified</option>
+          <option>Research &amp; Academic Support</option>
+          <option>Student / Career Advisory</option>
+          <option>Corporate Research</option>
+          <option>Policy &amp; Development Research</option>
+          <option>Training / Capacity Building</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeReviewModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveReview()">Save Review</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-backdrop" id="confirmModal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h3>Confirm Delete</h3>
+      <button class="modal-close" onclick="closeConfirm()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="confirm-msg" id="confirmMsg">Are you sure you want to delete this item? This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="confirmOkBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════
+   AUTH
+════════════════════════════════════════ */
+const ADMIN_USER = 'admin';
+let adminPass = localStorage.getItem('sv_admin_pass') || 'surplusviews2025';
+
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  if (u === ADMIN_USER && p === adminPass) {
+    document.getElementById('loginOverlay').style.display = 'none';
+    initApp();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+  }
+}
+document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function doLogout() {
+  document.getElementById('loginOverlay').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginErr').style.display = 'none';
+}
+
+function changePw() {
+  const curr = document.getElementById('currPw').value;
+  const nw   = document.getElementById('newPw').value;
+  if (curr !== adminPass) { toast('Current password is incorrect', '❌'); return; }
+  if (nw.length < 6)      { toast('New password must be at least 6 characters', '❌'); return; }
+  adminPass = nw;
+  localStorage.setItem('sv_admin_pass', nw);
+  document.getElementById('currPw').value = '';
+  document.getElementById('newPw').value = '';
+  toast('Password updated successfully', '✅');
+}
+
+/* ════════════════════════════════════════
+   DATA
+════════════════════════════════════════ */
+const DEFAULT_POSTS = [
+  {id:1, title:"How to Write a Winning Scholarship Essay in 2025", excerpt:"A step-by-step guide to crafting compelling scholarship applications that stand out — from framing your story to perfecting your final draft.", category:"Career Advisory", date:"2025-05-02", readTime:6, author:"Surplusviews Team", body:"<p>Getting a scholarship is one of the most competitive challenges students face...</p>", published:true, featured:true},
+  {id:2, title:"5 Common Thesis Mistakes and How to Avoid Them", excerpt:"From weak research questions to poor referencing, we identify the pitfalls that trip up most students.", category:"Research", date:"2025-04-18", readTime:4, author:"Surplusviews Team", body:"<p>Writing a thesis is a major academic milestone...</p>", published:true, featured:false},
+  {id:3, title:"Nigeria's Emerging Industries: A Mid-Year Review", excerpt:"An analysis of the sectors showing the most growth momentum in Nigeria's economy.", category:"Market Intel", date:"2025-04-05", readTime:7, author:"Surplusviews Team", body:"<p>Nigeria's economy continues to diversify...</p>", published:true, featured:false},
+  {id:4, title:"Understanding Social Impact Assessment Frameworks", excerpt:"A plain-language guide to the major SIA frameworks used by development organisations.", category:"Policy", date:"2025-03-22", readTime:5, author:"Surplusviews Team", body:"<p>Social Impact Assessments are critical tools...</p>", published:true, featured:false}
+];
+
+const DEFAULT_REVIEWS = [
+  {id:1, name:"Adaeze O.", role:"MSc Student, University of Lagos", stars:5, text:"Surplusviews helped me complete my thesis in record time. The quality was exceptional and they guided me through every chapter. I couldn't have graduated without them!", service:"Research & Academic Support"},
+  {id:2, name:"Emeka T.", role:"Business Owner, Abuja", stars:5, text:"Their market analysis report was thorough, well-researched, and gave us the insights we needed to expand into a new sector. Highly professional team.", service:"Corporate Research"},
+  {id:3, name:"Fatima B.", role:"Scholarship Recipient, Kano", stars:5, text:"I applied to 3 scholarships with their support and got 2 offers. Their essay coaching made all the difference. Worth every naira spent!", service:"Student / Career Advisory"},
+  {id:4, name:"Dr. Chidi N.", role:"NGO Director, Port Harcourt", stars:5, text:"Their social impact assessment was comprehensive and met international standards. Our development partners were very impressed with the report quality.", service:"Policy & Development Research"},
+  {id:5, name:"Yetunde A.", role:"Final Year Student, OAU", stars:4, text:"Great service and very responsive team. My project was delivered on time and my supervisor praised the referencing and data analysis sections.", service:"Research & Academic Support"},
+  {id:6, name:"Ibrahim M.", role:"HR Manager, Lagos", stars:5, text:"We commissioned a capacity building workshop for our team and the facilitators were knowledgeable and engaging. Our team loved it. Will use them again!", service:"Training / Capacity Building"}
+];
+
+function getPosts()   { try { const d = localStorage.getItem('sv_posts');   return d ? JSON.parse(d) : [...DEFAULT_POSTS]; }   catch(e){ return [...DEFAULT_POSTS]; } }
+function getReviews() { try { const d = localStorage.getItem('sv_reviews'); return d ? JSON.parse(d) : [...DEFAULT_REVIEWS]; } catch(e){ return [...DEFAULT_REVIEWS]; } }
+function savePosts(p)   { localStorage.setItem('sv_posts',   JSON.stringify(p)); }
+function saveReviews(r) { localStorage.setItem('sv_reviews', JSON.stringify(r)); }
+function nextId(arr) { return arr.length ? Math.max(...arr.map(x=>x.id)) + 1 : 1; }
+
+function fmtDate(d) {
+  if (!d) return '';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+}
+
+/* ════════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════════ */
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  const titles = {dashboard:'Dashboard', posts:'Blog Posts', reviews:'Client Reviews', settings:'Settings'};
+  document.getElementById('topbarTitle').textContent = titles[name] || name;
+  if (name === 'posts')    renderPostsTable();
+  if (name === 'reviews')  renderReviewsTable();
+  if (name === 'dashboard') renderDashboard();
+}
+
+/* ════════════════════════════════════════
+   DASHBOARD
+════════════════════════════════════════ */
+function renderDashboard() {
+  const posts = getPosts();
+  const reviews = getReviews();
+  const published = posts.filter(p => p.published);
+  const featured  = posts.filter(p => p.featured);
+  const avgStars  = reviews.length ? (reviews.reduce((a,r)=>a+r.stars,0)/reviews.length).toFixed(1) : '0';
+
+  document.getElementById('dashStats').innerHTML = `
+    <div class="stat-card"><div class="stat-card-label">Total Posts</div><div class="stat-card-num">${posts.length}</div><div class="stat-card-sub">${published.length} published</div></div>
+    <div class="stat-card"><div class="stat-card-label">Featured Posts</div><div class="stat-card-num">${featured.length}</div><div class="stat-card-sub">Shown in spotlight</div></div>
+    <div class="stat-card"><div class="stat-card-label">Reviews</div><div class="stat-card-num">${reviews.length}</div><div class="stat-card-sub">Client testimonials</div></div>
+    <div class="stat-card"><div class="stat-card-label">Avg. Rating</div><div class="stat-card-num">${avgStars}</div><div class="stat-card-sub">Out of 5 stars</div></div>
+  `;
+
+  const pTbody = document.querySelector('#dashPostsTable tbody');
+  pTbody.innerHTML = posts.slice(0,5).map(p => `
+    <tr>
+      <td><strong>${p.title}</strong></td>
+      <td>${p.category}</td>
+      <td>${fmtDate(p.date)}</td>
+      <td><span class="badge ${p.published?'badge-published':'badge-draft'}">${p.published?'Published':'Draft'}</span></td>
+    </tr>`).join('');
+
+  const rTbody = document.querySelector('#dashReviewsTable tbody');
+  rTbody.innerHTML = reviews.slice(0,5).map(r => `
+    <tr>
+      <td><strong>${r.name}</strong></td>
+      <td>${r.role}</td>
+      <td>${'★'.repeat(r.stars)}</td>
+      <td><span class="badge badge-published">Visible</span></td>
+    </tr>`).join('');
+}
+
+/* ════════════════════════════════════════
+   POSTS TABLE
+════════════════════════════════════════ */
+function renderPostsTable() {
+  let posts = getPosts();
+  const search = document.getElementById('postSearch')?.value.toLowerCase() || '';
+  const cat    = document.getElementById('postFilterCat')?.value || '';
+  if (search) posts = posts.filter(p => p.title.toLowerCase().includes(search) || p.excerpt.toLowerCase().includes(search));
+  if (cat)    posts = posts.filter(p => p.category === cat);
+
+  const tbody = document.getElementById('postsTableBody');
+  const empty = document.getElementById('postsEmpty');
+
+  if (!posts.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = posts.map(p => `
+    <tr>
+      <td>
+        <strong>${p.title}</strong>
+        ${p.featured ? '<span class="badge badge-featured" style="margin-left:.4rem;">⭐ Featured</span>' : ''}
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem;">${p.excerpt.slice(0,70)}…</div>
+      </td>
+      <td>${p.category}</td>
+      <td style="white-space:nowrap;">${fmtDate(p.date)}</td>
+      <td><span class="badge ${p.published?'badge-published':'badge-draft'}">${p.published?'Published':'Draft'}</span></td>
+      <td>
+        <div class="td-actions">
+          <button class="btn btn-ghost btn-sm" onclick="editPost(${p.id})">✏️ Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deletePost(${p.id})">🗑</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+/* ════════════════════════════════════════
+   POST MODAL
+════════════════════════════════════════ */
+function openPostModal(post) {
+  document.getElementById('postModalTitle').textContent = post ? 'Edit Post' : 'New Blog Post';
+  document.getElementById('postId').value        = post ? post.id : '';
+  document.getElementById('postTitle').value     = post ? post.title : '';
+  document.getElementById('postCategory').value  = post ? post.category : '';
+  document.getElementById('postDate').value      = post ? post.date : new Date().toISOString().split('T')[0];
+  document.getElementById('postReadTime').value  = post ? post.readTime : 5;
+  document.getElementById('postAuthor').value    = post ? (post.author||'') : 'Surplusviews Team';
+  document.getElementById('postExcerpt').value   = post ? post.excerpt : '';
+  document.getElementById('postBody').innerHTML  = post ? (post.body||'') : '';
+  document.getElementById('postPublished').checked = post ? !!post.published : true;
+  document.getElementById('postFeatured').checked  = post ? !!post.featured : false;
+  document.getElementById('postModal').classList.add('open');
+}
+
+function closePostModal() { document.getElementById('postModal').classList.remove('open'); }
+
+function editPost(id) {
+  const post = getPosts().find(p => p.id === id);
+  if (post) openPostModal(post);
+}
+
+function savePost() {
+  const title    = document.getElementById('postTitle').value.trim();
+  const category = document.getElementById('postCategory').value;
+  const date     = document.getElementById('postDate').value;
+  const excerpt  = document.getElementById('postExcerpt').value.trim();
+
+  if (!title || !category || !date || !excerpt) { toast('Please fill in all required fields', '⚠️'); return; }
+
+  const posts = getPosts();
+  const id    = document.getElementById('postId').value;
+  const isNew = !id;
+
+  const post = {
+    id:        isNew ? nextId(posts) : parseInt(id),
+    title,
+    category,
+    date,
+    readTime:  parseInt(document.getElementById('postReadTime').value) || 5,
+    author:    document.getElementById('postAuthor').value.trim() || 'Surplusviews Team',
+    excerpt,
+    body:      document.getElementById('postBody').innerHTML,
+    published: document.getElementById('postPublished').checked,
+    featured:  document.getElementById('postFeatured').checked
+  };
+
+  if (post.featured) posts.forEach(p => { p.featured = false; });
+
+  if (isNew) {
+    posts.unshift(post);
+  } else {
+    const idx = posts.findIndex(p => p.id === post.id);
+    if (idx > -1) posts[idx] = post; else posts.unshift(post);
+  }
+
+  savePosts(posts);
+  closePostModal();
+  renderPostsTable();
+  renderDashboard();
+  toast(isNew ? 'Post published successfully!' : 'Post updated!', '✅');
+}
+
+function deletePost(id) {
+  openConfirm('Are you sure you want to permanently delete this blog post? This cannot be undone.', () => {
+    const posts = getPosts().filter(p => p.id !== id);
+    savePosts(posts);
+    renderPostsTable();
+    renderDashboard();
+    toast('Post deleted', '🗑');
+  });
+}
+
+/* ════════════════════════════════════════
+   REVIEWS TABLE
+════════════════════════════════════════ */
+function renderReviewsTable() {
+  const reviews = getReviews();
+  const tbody = document.getElementById('reviewsTableBody');
+  const empty = document.getElementById('reviewsEmpty');
+
+  if (!reviews.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = reviews.map(r => `
+    <tr>
+      <td><strong>${r.name}</strong></td>
+      <td style="font-size:.83rem;color:var(--muted);">${r.role}</td>
+      <td style="color:var(--gold);font-size:1rem;">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</td>
+      <td style="font-size:.82rem;color:var(--muted);">"${r.text.slice(0,60)}…"</td>
+      <td>
+        <div class="td-actions">
+          <button class="btn btn-ghost btn-sm" onclick="editReview(${r.id})">✏️ Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteReview(${r.id})">🗑</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+/* ════════════════════════════════════════
+   REVIEW MODAL
+════════════════════════════════════════ */
+function setStar(n) {
+  document.getElementById('reviewStars').value = n;
+  document.querySelectorAll('#starPicker span').forEach((s,i) => {
+    s.classList.toggle('active', i < n);
+  });
+}
+
+function openReviewModal(review) {
+  document.getElementById('reviewModalTitle').textContent = review ? 'Edit Review' : 'Add Client Review';
+  document.getElementById('reviewId').value      = review ? review.id : '';
+  document.getElementById('reviewName').value    = review ? review.name : '';
+  document.getElementById('reviewRole').value    = review ? review.role : '';
+  document.getElementById('reviewText').value    = review ? review.text : '';
+  document.getElementById('reviewService').value = review ? (review.service||'') : '';
+  setStar(review ? review.stars : 5);
+  document.getElementById('reviewModal').classList.add('open');
+}
+
+function closeReviewModal() { document.getElementById('reviewModal').classList.remove('open'); }
+
+function editReview(id) {
+  const r = getReviews().find(r => r.id === id);
+  if (r) openReviewModal(r);
+}
+
+function saveReview() {
+  const name = document.getElementById('reviewName').value.trim();
+  const role = document.getElementById('reviewRole').value.trim();
+  const text = document.getElementById('reviewText').value.trim();
+  if (!name || !role || !text) { toast('Please fill in name, role, and review text', '⚠️'); return; }
+
+  const reviews = getReviews();
+  const id = document.getElementById('reviewId').value;
+  const isNew = !id;
+
+  const review = {
+    id:      isNew ? nextId(reviews) : parseInt(id),
+    name, role, text,
+    stars:   parseInt(document.getElementById('reviewStars').value) || 5,
+    service: document.getElementById('reviewService').value
+  };
+
+  if (isNew) {
+    reviews.push(review);
+  } else {
+    const idx = reviews.findIndex(r => r.id === review.id);
+    if (idx > -1) reviews[idx] = review; else reviews.push(review);
+  }
+
+  saveReviews(reviews);
+  closeReviewModal();
+  renderReviewsTable();
+  renderDashboard();
+  toast(isNew ? 'Review added!' : 'Review updated!', '✅');
+}
+
+function deleteReview(id) {
+  openConfirm('Delete this client review? This cannot be undone.', () => {
+    saveReviews(getReviews().filter(r => r.id !== id));
+    renderReviewsTable();
+    renderDashboard();
+    toast('Review deleted', '🗑');
+  });
+}
+
+/* ════════════════════════════════════════
+   RICH TEXT
+════════════════════════════════════════ */
+function fmt(cmd) { document.execCommand(cmd, false, null); document.getElementById('postBody').focus(); }
+function fmtH2()  { document.execCommand('formatBlock', false, 'h2'); document.getElementById('postBody').focus(); }
+function fmtH3()  { document.execCommand('formatBlock', false, 'h3'); document.getElementById('postBody').focus(); }
+
+/* ════════════════════════════════════════
+   CONFIRM DIALOG
+════════════════════════════════════════ */
+let _confirmCb = null;
+function openConfirm(msg, cb) {
+  _confirmCb = cb;
+  document.getElementById('confirmMsg').textContent = msg;
+  document.getElementById('confirmOkBtn').onclick = () => { closeConfirm(); if (_confirmCb) _confirmCb(); };
+  document.getElementById('confirmModal').classList.add('open');
+}
+function closeConfirm() { document.getElementById('confirmModal').classList.remove('open'); }
+
+function confirmReset() {
+  openConfirm('This will permanently delete ALL blog posts and reviews and restore the default sample data. Are you sure?', () => {
+    localStorage.removeItem('sv_posts');
+    localStorage.removeItem('sv_reviews');
+    renderDashboard();
+    toast('All data reset to defaults', '🔄');
+  });
+}
+
+/* ════════════════════════════════════════
+   TOAST
+════════════════════════════════════════ */
+let _toastTimer;
+function toast(msg, icon='ℹ️') {
+  const t = document.getElementById('toast');
+  t.innerHTML = `${icon} ${msg}`;
+  t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ════════════════════════════════════════
+   EXPORT
+════════════════════════════════════════ */
+function exportData() {
+  const data = { posts: getPosts(), reviews: getReviews(), exported: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'surplusviews-data.json';
+  a.click();
+  toast('Data exported successfully', '⬇');
+}
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+function initApp() {
+  renderDashboard();
+}
+
+/* Close modals on backdrop click */
+['postModal','reviewModal','confirmModal'].forEach(id => {
+  document.getElementById(id).addEventListener('click', function(e) {
+    if (e.target === this) {
+      if (id === 'postModal') closePostModal();
+      else if (id === 'reviewModal') closeReviewModal();
+      else closeConfirm();
+    }
+  });
+});
+
+/* Star picker init */
+setStar(5);
+</script>
+</body>
+</html>

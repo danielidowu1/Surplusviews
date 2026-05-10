@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — Surplusviews Global Limited</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-hero {
+      background: var(--navy);
+      padding: 5rem 5% 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(240,192,64,.03) 0px,
+        rgba(240,192,64,.03) 1px,
+        transparent 1px,
+        transparent 40px
+      );
+      pointer-events: none;
+    }
+    .page-hero h1 { color: var(--white); font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: .8rem; }
+    .page-hero p  { color: rgba(255,255,255,.7); max-width: 540px; margin: 0 auto; font-size: 1rem; }
+    .breadcrumb {
+      display: flex;
+      justify-content: center;
+      gap: .4rem;
+      font-size: .8rem;
+      color: rgba(255,255,255,.45);
+      margin-bottom: 1.5rem;
+    }
+    .breadcrumb a { color: var(--gold); }
+
+    /* STORY */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .story-visual {
+      background: var(--navy);
+      border-radius: var(--r-lg);
+      padding: 3rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .story-visual::before {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(240,192,64,.08);
+    }
+    .story-visual-icon { font-size: 4rem; margin-bottom: 1.5rem; display: block; }
+    .story-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      color: var(--white);
+      font-style: italic;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .story-quote-author {
+      font-size: .85rem;
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .story-text h2 { font-size: 2rem; color: var(--navy); margin-bottom: 1.2rem; }
+    .story-text p  { color: var(--muted); line-height: 1.85; margin-bottom: 1.2rem; font-size: .97rem; }
+
+    /* VALUES */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .value-card {
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 2rem 1.8rem;
+      text-align: center;
+      border-top: 4px solid var(--gold);
+      transition: box-shadow .2s, transform .2s;
+    }
+    .value-card:hover { box-shadow: 0 8px 28px rgba(13,31,110,.1); transform: translateY(-3px); }
+    .value-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+    .value-card h3 { font-size: 1.2rem; color: var(--navy); margin-bottom: .5rem; }
+    .value-card p  { font-size: .87rem; color: var(--muted); }
+
+    /* TEAM */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.8rem;
+    }
+    .team-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 2rem;
+      text-align: center;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .team-card:hover { box-shadow: 0 8px 28px rgba(13,31,110,.1); transform: translateY(-3px); }
+    .team-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin: 0 auto 1.2rem;
+    }
+    .team-name { font-size: 1.1rem; color: var(--navy); margin-bottom: .25rem; }
+    .team-role { font-size: .82rem; color: var(--gold-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .6rem; }
+    .team-bio  { font-size: .84rem; color: var(--muted); line-height: 1.65; }
+
+    /* CONTACT STRIP */
+    .contact-strip {
+      background: var(--navy);
+      border-radius: var(--r-lg);
+      padding: 2.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    .contact-strip h3 { color: var(--white); font-size: 1.5rem; margin-bottom: .5rem; }
+    .contact-strip p  { color: rgba(255,255,255,.65); font-size: .9rem; }
+    .contact-items { display: flex; flex-direction: column; gap: .8rem; }
+    .contact-item  { display: flex; align-items: center; gap: .75rem; color: rgba(255,255,255,.8); font-size: .9rem; }
+    .contact-item-icon { font-size: 1.1rem; }
+
+    /* WHATSAPP BADGE */
+    .whatsapp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      background: #25d366;
+      color: var(--white);
+      font-weight: 600;
+      font-size: .95rem;
+      padding: .75rem 1.5rem;
+      border-radius: 30px;
+      margin-top: 1rem;
+      transition: background .2s, transform .2s;
+    }
+    .whatsapp-badge:hover { background: #1db954; transform: scale(1.03); }
+
+    @media (max-width: 860px) {
+      .story-grid { grid-template-columns: 1fr; }
+      .story-visual { display: none; }
+      .contact-strip { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-badge">SV</div>
+    <div class="logo-text">
+      <span class="logo-name">Surplusviews Global</span>
+      <span class="logo-tagline">Consulting</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="order.html" class="nav-cta">Get Started</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Open menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <a href="index.html">Home</a>
+  <a href="services.html">Services</a>
+  <a href="blog.html">Blog</a>
+  <a href="about.html"  class="active">About</a>
+  <a href="order.html" class="drawer-cta">Get Started</a>
+</div>
+<script>
+function toggleMenu() {
+  var btn    = document.getElementById('hamburger');
+  var drawer = document.getElementById('navDrawer');
+  btn.classList.toggle('open');
+  drawer.classList.toggle('open');
+  document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+}
+document.querySelectorAll('.nav-drawer a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('navDrawer').classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
+</script>
+
+<div class="page-hero">
+  <div class="breadcrumb"><a href="index.html">Home</a> / <span>About</span></div>
+  <h1>About Surplusviews Global</h1>
+  <p>A Lagos-based consulting firm on a mission to make world-class research and advisory services accessible to every individual and organisation.</p>
+</div>
+
+<!-- STORY -->
+<section class="section">
+  <div class="story-grid">
+    <div class="story-visual">
+      <span class="story-visual-icon">🌍</span>
+      <div class="story-quote">"We exist to make knowledge work for you — simply, easily, and smartly."</div>
+      <div class="story-quote-author">— Surplusviews Global Limited</div>
+    </div>
+    <div class="story-text">
+      <div class="section-label">Our Story</div>
+      <h2>Who We Are</h2>
+      <p>Surplusviews Global Limited is a professional consulting firm based in Lagos, Nigeria. We specialise in research support, career advisory, corporate intelligence, policy development, and training — bringing together a team of experienced researchers, analysts, and advisors committed to delivering exceptional results.</p>
+      <p>We were founded on a simple but powerful observation: too many capable students, professionals, and organisations lack access to the quality research and advisory support they need to succeed. We set out to change that — making world-class support simple, easy, and smart.</p>
+      <p>Today, we work with students, universities, NGOs, government agencies, and private sector organisations across Nigeria and beyond, delivering tailored solutions that drive real outcomes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION, VISION, VALUES -->
+<section class="section section-alt">
+  <div class="section-label">What Drives Us</div>
+  <h2 class="section-title">Mission, Vision &amp; Values</h2>
+  <br>
+  <div class="values-grid">
+    <div class="value-card fade-up">
+      <div class="value-icon">🎯</div>
+      <h3>Our Mission</h3>
+      <p>To provide accessible, high-quality research, advisory, and consulting services that empower individuals and organisations to achieve their goals.</p>
+    </div>
+    <div class="value-card fade-up delay-1">
+      <div class="value-icon">🔭</div>
+      <h3>Our Vision</h3>
+      <p>To be Africa's most trusted and accessible consulting partner — known for excellence, integrity, and transformative impact.</p>
+    </div>
+    <div class="value-card fade-up delay-2">
+      <div class="value-icon">🤝</div>
+      <h3>Integrity</h3>
+      <p>We deliver honest, unbiased, and rigorously accurate work — every time. Our reputation is built on trust.</p>
+    </div>
+    <div class="value-card fade-up delay-3">
+      <div class="value-icon">💡</div>
+      <h3>Excellence</h3>
+      <p>We set high standards for every deliverable. Quality is not an afterthought — it is embedded in everything we do.</p>
+    </div>
+    <div class="value-card fade-up">
+      <div class="value-icon">🚀</div>
+      <h3>Innovation</h3>
+      <p>We continuously evolve our methods and approaches to stay ahead — delivering smarter solutions for a changing world.</p>
+    </div>
+    <div class="value-card fade-up delay-1">
+      <div class="value-icon">🌱</div>
+      <h3>Impact</h3>
+      <p>We measure our success by the tangible difference we make for our clients, communities, and the broader African ecosystem.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="section">
+  <div class="section-label">The People Behind the Work</div>
+  <h2 class="section-title">Our Team</h2>
+  <p class="section-sub">A diverse team of researchers, analysts, advisors, and subject matter experts — united by a passion for knowledge and results.</p>
+
+  <div class="team-grid">
+    <div class="team-card fade-up">
+      <div class="team-avatar">RO</div>
+      <div class="team-name">Research Operations Lead</div>
+      <div class="team-role">Head of Research</div>
+      <p class="team-bio">Leads the academic and corporate research practice. Over 10 years of experience in quantitative and qualitative research methods.</p>
+    </div>
+    <div class="team-card fade-up delay-1">
+      <div class="team-avatar">CA</div>
+      <div class="team-name">Career Advisory Team</div>
+      <div class="team-role">Advisory Services</div>
+      <p class="team-bio">Specialises in scholarship placement, career coaching, and professional development for students and young professionals.</p>
+    </div>
+    <div class="team-card fade-up delay-2">
+      <div class="team-avatar">MI</div>
+      <div class="team-name">Market Intelligence Unit</div>
+      <div class="team-role">Corporate Research</div>
+      <p class="team-bio">Delivers market analysis, industry reports, and competitive intelligence for businesses across diverse sectors.</p>
+    </div>
+    <div class="team-card fade-up delay-3">
+      <div class="team-avatar">PD</div>
+      <div class="team-name">Policy &amp; Development Team</div>
+      <div class="team-role">Policy Research</div>
+      <p class="team-bio">Experienced in social impact assessments, development programme evaluations, and evidence-based policy research.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT INFO -->
+<section class="section section-alt">
+  <div class="contact-strip fade-up">
+    <div>
+      <h3>Reach Out to Us</h3>
+      <p>We'd love to hear about your needs. Get in touch today.</p>
+      <a href="tel:08033912203" class="whatsapp-badge">💬 WhatsApp: 0803 391 2203</a>
+    </div>
+    <div class="contact-items">
+      <div class="contact-item"><span class="contact-item-icon">📞</span><span>08033912203 / 0916 490 7691</span></div>
+      <div class="contact-item"><span class="contact-item-icon">✉️</span><span>surplusviewsglobal@gmail.com</span></div>
+      <div class="contact-item"><span class="contact-item-icon">🌐</span><span>www.surplusviewsglobal.com</span></div>
+      <div class="contact-item"><span class="contact-item-icon">📍</span><span>Lagos, Nigeria</span></div>
+    </div>
+    <a href="order.html" class="btn btn-primary" style="align-self:center;">Request a Service</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-badge">SV</div>
+        <div class="logo-text">
+          <span class="logo-name">Surplusviews Global</span>
+          <span class="logo-tagline">Consulting</span>
+        </div>
+      </div>
+      <p class="footer-desc">Simple, Easy and Smart — delivering research, advisory, and consulting services across Nigeria and beyond.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="order.html">Get Started</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item"><span class="footer-contact-icon">📞</span><span>08033912203 / 0916 490 7691</span></div>
+      <div class="footer-contact-item"><span class="footer-contact-icon">✉️</span><span>surplusviewsglobal@gmail.com</span></div>
+      <div class="footer-contact-item"><span class="footer-contact-icon">🌐</span><span>www.surplusviewsglobal.com</span></div>
+      <div class="footer-contact-item"><span class="footer-contact-icon">📍</span><span>Lagos, Nigeria</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Surplusviews Global Limited. All rights reserved.</span>
+    <span class="tagline-footer">Simple, Easy and Smart...</span>
+  </div>
+</footer>
+
+</body>
+</html>
