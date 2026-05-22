@@ -8,7 +8,16 @@
   <style>
     /* ── HERO ── */
     .hero {
-      background: var(--navy);
+      background:
+        linear-gradient(
+          100deg,
+          rgba(8, 18, 72, 0.94) 0%,
+          rgba(8, 18, 72, 0.86) 30%,
+          rgba(13, 31, 110, 0.55) 65%,
+          rgba(13, 31, 110, 0.30) 100%
+        ),
+        url('images/hero/tall-building.jpg') center/cover no-repeat;
+      background-color: var(--navy);
       min-height: 92vh;
       display: flex;
       align-items: center;
@@ -18,47 +27,13 @@
       margin-bottom: 0;
     }
 
-    /* ── HERO SLIDESHOW ── */
-    .hero-slides {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-    .hero-slide {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-      will-change: opacity;
-    }
-    .hero-slide.active { opacity: 1; }
-    /* Navy-blue tint overlay sits ON TOP of each image, BELOW the content */
-    .hero-slide::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(rgba(8, 18, 72, 0.55), rgba(13, 31, 110, 0.55));
-      pointer-events: none;
-    }
-    /* Lift content above the slideshow + decorative circles */
-    .hero-inner { position: relative; z-index: 2; }
-    .hero::before, .hero::after { z-index: 1; }
-    /* Accessibility: honor reduced-motion preference */
-    @media (prefers-reduced-motion: reduce) {
-      .hero-slide { transition: none; }
-    }
-
     .hero::before {
       content: '';
       position: absolute;
       top: -80px; right: -80px;
       width: 520px; height: 520px;
       border-radius: 50%;
-      background: rgba(240,192,64,.07);
+      background: rgba(240,192,64,.09);
       pointer-events: none;
     }
 
@@ -68,7 +43,7 @@
       bottom: -120px; left: 30%;
       width: 380px; height: 380px;
       border-radius: 50%;
-      background: rgba(240,192,64,.04);
+      background: rgba(240,192,64,.05);
       pointer-events: none;
     }
 
@@ -80,6 +55,8 @@
       max-width: 1200px;
       margin: 0 auto;
       width: 100%;
+      position: relative;
+      z-index: 2;
     }
 
     .hero-eyebrow {
@@ -152,11 +129,13 @@
 
     .hcard {
       position: absolute;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(8, 18, 72, 0.55);
+      border: 1px solid rgba(255,255,255,.16);
       border-radius: 16px;
       padding: 1.6rem;
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 10px 40px rgba(0,0,0,.25);
     }
 
     .hcard-main {
@@ -624,12 +603,6 @@
 
 <!-- HERO -->
 <section class="hero">
-  <!-- Auto-rotating background slideshow (sits behind hero content) -->
-  <div class="hero-slides" aria-hidden="true">
-    <div class="hero-slide active" style="background-image: url('images/hero-1.jpg');"></div>
-    <div class="hero-slide" style="background-image: url('images/hero-2.jpg');"></div>
-  </div>
-
   <div class="hero-inner">
     <div>
       <div class="hero-eyebrow fade-up">Simple, Easy and Smart</div>
@@ -823,20 +796,6 @@
 </section>
 
 <script>
-/* ── HERO SLIDESHOW ── */
-(function () {
-  const slides = document.querySelectorAll('.hero-slide');
-  if (slides.length < 2) return;
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduced) return; // honor user preference: show only first image, no rotation
-  let i = 0;
-  setInterval(() => {
-    slides[i].classList.remove('active');
-    i = (i + 1) % slides.length;
-    slides[i].classList.add('active');
-  }, 3000);
-})();
-
 /* ── HAMBURGER ── */
 function toggleMenu() {
   const btn    = document.getElementById('hamburger');
