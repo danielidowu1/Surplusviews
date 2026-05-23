@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="pageTitle">Article — Surplusviews Global Limited</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ─── ARTICLE HERO ─── */
+    .article-hero {
+      background:
+        linear-gradient(180deg, rgba(8,18,72,.55) 0%, rgba(8,18,72,.92) 100%),
+        var(--navy);
+      background-size: cover;
+      background-position: center;
+      color: var(--white);
+      padding: 5rem 5% 4rem;
+      text-align: center;
+      position: relative;
+    }
+    .article-hero.with-cover { padding: 8rem 5% 5rem; }
+    .breadcrumb {
+      display: flex;
+      justify-content: center;
+      gap: .4rem;
+      font-size: .8rem;
+      color: rgba(255,255,255,.6);
+      margin-bottom: 1.5rem;
+    }
+    .breadcrumb a { color: var(--gold); }
+    .article-tag-hero {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: .72rem;
+      font-weight: 700;
+      padding: .35rem .9rem;
+      border-radius: 4px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+    .article-hero h1 {
+      color: var(--white);
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      max-width: 880px;
+      margin: 0 auto 1.2rem;
+      line-height: 1.2;
+    }
+    .article-meta {
+      color: rgba(255,255,255,.75);
+      font-size: .9rem;
+      letter-spacing: .02em;
+    }
+    .article-meta span + span::before { content: ' · '; margin: 0 .4rem; color: rgba(255,255,255,.4); }
+
+    /* ─── ARTICLE BODY ─── */
+    .article-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 4rem 5%;
+    }
+    .article-excerpt {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.35rem;
+      line-height: 1.5;
+      color: var(--navy);
+      padding: 1.5rem 0 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+    .article-body {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--text);
+    }
+    .article-body h2 {
+      font-size: 1.7rem;
+      color: var(--navy);
+      margin: 2.5rem 0 1rem;
+    }
+    .article-body h3 {
+      font-size: 1.3rem;
+      color: var(--navy);
+      margin: 2rem 0 .8rem;
+    }
+    .article-body p { margin-bottom: 1.4rem; }
+    .article-body ul, .article-body ol { margin: 0 0 1.4rem 1.5rem; }
+    .article-body li { margin-bottom: .5rem; }
+    .article-body a { color: var(--navy); text-decoration: underline; }
+    .article-body img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--r);
+      margin: 1.5rem 0;
+    }
+    .article-body blockquote {
+      border-left: 3px solid var(--gold);
+      padding: .6rem 0 .6rem 1.4rem;
+      color: var(--muted);
+      font-style: italic;
+      margin: 1.8rem 0;
+    }
+
+    .article-footer-strip {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .article-author { font-size: .9rem; color: var(--muted); }
+    .article-author strong { color: var(--navy); }
+
+    /* ─── RELATED ─── */
+    .related-wrap {
+      background: var(--cream);
+      padding: 4rem 5%;
+    }
+    .related-wrap h3 {
+      font-size: 1.8rem;
+      color: var(--navy);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .related-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow .2s, transform .2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .related-card:hover { box-shadow: 0 6px 24px rgba(13,31,110,.1); transform: translateY(-3px); }
+    .related-thumb {
+      height: 140px;
+      background-size: cover;
+      background-position: center;
+      background-color: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: rgba(255,255,255,.4);
+    }
+    .related-body { padding: 1.2rem 1.4rem 1.4rem; }
+    .related-tag {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--gold-muted);
+      margin-bottom: .4rem;
+    }
+    .related-body h4 {
+      font-size: 1rem;
+      color: var(--navy);
+      line-height: 1.35;
+      margin-bottom: .4rem;
+    }
+    .related-body .meta { font-size: .75rem; color: var(--muted); }
+
+    /* ─── NOT FOUND ─── */
+    .not-found {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 6rem 5%;
+      text-align: center;
+    }
+    .not-found h2 { font-size: 2rem; color: var(--navy); margin-bottom: 1rem; }
+    .not-found p { color: var(--muted); margin-bottom: 2rem; }
+
+    @media (max-width: 600px) {
+      .article-wrap { padding: 2.5rem 5%; }
+      .article-excerpt { font-size: 1.15rem; }
+      .article-body { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-badge">SV</div>
+    <div class="logo-text">
+      <span class="logo-name">Surplusviews Global</span>
+      <span class="logo-tagline">Consulting</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="blog.html" class="active">Blog</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="order.html" class="nav-cta">Get Started</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Open menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-drawer" id="navDrawer">
+  <a href="index.html">Home</a>
+  <a href="services.html">Services</a>
+  <a href="blog.html" class="active">Blog</a>
+  <a href="about.html">About</a>
+  <a href="order.html" class="drawer-cta">Get Started</a>
+</div>
+<script>
+function toggleMenu() {
+  var btn    = document.getElementById('hamburger');
+  var drawer = document.getElementById('navDrawer');
+  btn.classList.toggle('open');
+  drawer.classList.toggle('open');
+  document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+}
+document.querySelectorAll('.nav-drawer a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('navDrawer').classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
+</script>
+
+<div id="articleRoot"></div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-badge">SV</div>
+        <div class="logo-text">
+          <span class="logo-name">Surplusviews Global</span>
+          <span class="logo-tagline">Consulting</span>
+        </div>
+      </div>
+      <p class="footer-desc">Simple, Easy and Smart — delivering research, advisory, and consulting services across Nigeria and beyond.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="order.html">Get Started</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item"><span class="footer-contact-icon">📞</span><span>08033912203 / 0916 490 7691</span></div>
+      <div class="footer-contact-item"><span class="footer-contact-icon">✉️</span><span>surplusviewsglobal@gmail.com</span></div>
+      <div class="footer-contact-item"><span class="footer-contact-icon">🌐</span><span>www.surplusviewsglobal.com</span></div>
+      <div class="footer-contact-item"><span class="footer-contact-icon">📍</span><span>Lagos, Nigeria</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Surplusviews Global Limited. All rights reserved.</span>
+    <span class="tagline-footer">Simple, Easy and Smart...</span>
+  </div>
+</footer>
+
+<script>
+/* ════════════════════════════════════════
+   DEFAULT POSTS — must mirror blog.html
+   so the article page works for everyone,
+   not just devices that have visited admin
+════════════════════════════════════════ */
+const CAT_ICONS = {
+  'Career Advisory':'🎓', 'Research':'📝', 'Market Intel':'🏭',
+  'Policy':'📜', 'Training':'🧱', 'default':'📄'
+};
+
+const DEFAULT_POSTS = [
+  {id:1, title:"How to Write a Winning Scholarship Essay in 2025", excerpt:"The competition for scholarships has never been fiercer. But with the right strategy and storytelling approach, your application can rise to the top. We break down exactly what selection committees look for — and how to give it to them.", category:"Career Advisory", date:"2025-05-02", readTime:6, author:"Surplusviews Team", published:true, featured:true,
+   body:`<p>Scholarship committees read thousands of essays each year. The ones that win share a few common traits — and most of them have nothing to do with academic perfection.</p>
+   <h2>Start with a story, not a summary</h2>
+   <p>The opening sentence is your only shot to make a reader want to keep going. Don't introduce yourself by name and degree — open with a specific moment that reveals something about you.</p>
+   <h2>Connect your past to your proposed future</h2>
+   <p>Selection panels want to fund people who will use the opportunity well. Show a clear line from what you've already done to what the scholarship will help you do next.</p>
+   <h2>Edit ruthlessly</h2>
+   <p>Cut every sentence that doesn't earn its place. A 600-word essay that says one thing well beats a 1,000-word essay that says five things mediocrely.</p>`},
+
+  {id:2, title:"5 Common Thesis Mistakes and How to Avoid Them", excerpt:"From weak research questions to poor referencing, we identify the pitfalls that trip up most students — and how to sidestep them.", category:"Research", date:"2025-04-18", readTime:4, author:"Surplusviews Team", published:true, featured:false,
+   body:`<p>Most thesis problems trace back to decisions made in the first few weeks. Get these right and the rest of the project follows.</p>
+   <h3>1. A research question that is too broad</h3><p>"The impact of education on poverty" is not a research question — it's a textbook chapter. Narrow it until it can be answered with the data and time you actually have.</p>
+   <h3>2. Skipping the literature review shortcut</h3><p>Read the most recent review article in your field first. It will save you weeks.</p>
+   <h3>3. Mixing methods without justification</h3><p>If you use both qualitative and quantitative data, the proposal must explain why.</p>
+   <h3>4. Treating referencing as an afterthought</h3><p>Use a reference manager from day one. Fixing 150 citations the night before submission is misery.</p>
+   <h3>5. Defending your draft instead of improving it</h3><p>Supervisor feedback is a gift, not an attack. Read it twice before you respond.</p>`},
+
+  {id:3, title:"Nigeria's Emerging Industries: A Mid-Year Review", excerpt:"An analysis of the sectors showing the most growth momentum in Nigeria's economy — and what it means for investors and researchers.", category:"Market Intel", date:"2025-04-05", readTime:7, author:"Surplusviews Team", published:true, featured:false,
+   body:`<p>Halfway through 2025, three sectors stand out for the speed at which they are reshaping Nigeria's economy: fintech, renewable energy, and agribusiness.</p>
+   <h2>Fintech: maturation, not slowdown</h2>
+   <p>The early gold-rush is over. What's emerging is a more disciplined market where embedded finance and B2B platforms are pulling ahead of consumer wallets.</p>
+   <h2>Renewable energy: the off-grid story</h2>
+   <p>Solar mini-grid deployments grew by an estimated 38% year-on-year. The biggest constraint is no longer capital — it's last-mile logistics.</p>
+   <h2>Agribusiness: where the real value is</h2>
+   <p>Mid-stream processing remains the most under-funded part of the value chain. Companies that can move tomatoes, maize, or cassava from farm to factory at scale are quietly building durable margins.</p>`},
+
+  {id:4, title:"Understanding Social Impact Assessment Frameworks", excerpt:"A plain-language guide to the major SIA frameworks used by development organisations and government agencies across Africa.", category:"Policy", date:"2025-03-22", readTime:5, author:"Surplusviews Team", published:true, featured:false,
+   body:`<p>Social Impact Assessment (SIA) sounds intimidating, but at its core it answers a simple question: who is helped and who is harmed by this project?</p>
+   <h2>The three frameworks you'll meet most often</h2>
+   <p>The IFC Performance Standards, the Equator Principles, and the IAIA International Principles cover roughly 80% of what you'll encounter in practice.</p>
+   <p>They overlap heavily but differ in emphasis: IFC is the most operational, Equator focuses on financing decisions, and IAIA reads more like good-practice guidance for practitioners.</p>
+   <h2>What a good SIA actually does</h2>
+   <p>Beyond compliance, a useful SIA flags trade-offs early enough that the project design can still change. By the time the report is final, the decisions it influences are usually already made.</p>`},
+
+  {id:5, title:"Top 10 International Scholarships Open to Nigerian Students in 2025", excerpt:"A curated list of high-value scholarships with application windows in 2025 — covering both undergraduate and postgraduate levels.", category:"Career Advisory", date:"2025-03-10", readTime:8, author:"Surplusviews Team", published:true, featured:false,
+   body:`<p>We've sifted through several hundred opportunities to surface the ones that are realistically open to Nigerian applicants, fully or substantially funded, and accepting applications in 2025.</p>
+   <h3>Postgraduate</h3>
+   <ul>
+   <li><strong>Chevening</strong> — UK government, master's level, fully funded.</li>
+   <li><strong>Commonwealth Scholarships</strong> — UK study for citizens of Commonwealth countries.</li>
+   <li><strong>DAAD</strong> — Germany, broad coverage of master's and doctoral study.</li>
+   <li><strong>Fulbright Foreign Student Program</strong> — US, master's and PhD.</li>
+   <li><strong>MasterCard Foundation Scholars Program</strong> — multiple partner universities.</li>
+   </ul>
+   <h3>Undergraduate</h3>
+   <ul>
+   <li><strong>African Leadership University</strong> — needs-based aid.</li>
+   <li><strong>Mastercard Foundation at university partners</strong> — full-ride at select African and global universities.</li>
+   <li><strong>University of the People</strong> — tuition-free online degrees.</li>
+   </ul>
+   <p>Always check the official websites for current deadlines — these change every cycle.</p>`},
+
+  {id:6, title:"Qualitative vs Quantitative Research: Which Should You Use?", excerpt:"A practical guide to choosing the right methodology for your research project — with examples from real-world Nigerian studies.", category:"Research", date:"2025-02-28", readTime:5, author:"Surplusviews Team", published:true, featured:false,
+   body:`<p>The honest answer to "which methodology should I use?" is: it depends on the question you're asking.</p>
+   <h2>Use quantitative when you want to measure</h2>
+   <p>How many? How often? How much? How strong is the relationship between A and B? These are quantitative questions. They need numbers, samples large enough to generalise from, and statistical tools.</p>
+   <h2>Use qualitative when you want to understand</h2>
+   <p>Why do people do what they do? How do they describe the experience in their own words? What patterns emerge from open conversation? Qualitative work earns its place when the goal is depth, not breadth.</p>
+   <h2>Mixed methods: powerful but harder</h2>
+   <p>Combining the two can give you both the "how many" and the "why". But it doubles the design work — and reviewers will notice if either side feels bolted on.</p>`},
+
+  {id:7, title:"How to Conduct a Competitor Analysis on a Tight Budget", excerpt:"You don't need expensive tools to understand your competitive landscape. Here's how SMEs can gather actionable intelligence affordably.", category:"Market Intel", date:"2025-02-14", readTime:6, author:"Surplusviews Team", published:true, featured:false,
+   body:`<p>Premium market intelligence tools are useful — and out of reach for most small businesses. The good news: you can build a perfectly serviceable competitor view with free sources and a few hours per week.</p>
+   <h2>Step 1: name your real competitors</h2>
+   <p>Not the famous brands in your category — the businesses your actual customers also consider. Ask five recent customers what else they looked at.</p>
+   <h2>Step 2: track them systematically</h2>
+   <p>A simple spreadsheet with rows for each competitor and columns for pricing, positioning, recent product changes, and visible marketing channels gives you 80% of what a paid tool would.</p>
+   <h2>Step 3: review monthly, not constantly</h2>
+   <p>Real competitive shifts happen on a quarterly timescale. Checking daily creates noise; checking monthly catches signal.</p>`}
+];
+
+function getPosts() {
+  try { const d = localStorage.getItem('sv_posts'); return d ? JSON.parse(d) : DEFAULT_POSTS; }
+  catch(e) { return DEFAULT_POSTS; }
+}
+
+function fmtDate(d) {
+  if (!d) return '';
+  return new Date(d).toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+}
+
+function getQueryId() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  return id ? parseInt(id) : null;
+}
+
+function renderNotFound() {
+  document.getElementById('articleRoot').innerHTML = `
+    <div class="not-found">
+      <h2>Article Not Found</h2>
+      <p>We couldn't find the article you were looking for. It may have been moved or removed.</p>
+      <a href="blog.html" class="btn btn-primary">← Back to Blog</a>
+    </div>`;
+}
+
+function renderArticle() {
+  const id = getQueryId();
+  if (!id) { renderNotFound(); return; }
+
+  const posts = getPosts();
+  const post = posts.find(p => p.id === id && p.published !== false);
+  if (!post) { renderNotFound(); return; }
+
+  document.getElementById('pageTitle').textContent = post.title + ' — Surplusviews Global Limited';
+
+  const hasCover = !!post.cover;
+  const heroStyle = hasCover
+    ? `style="background-image: linear-gradient(180deg, rgba(8,18,72,.55) 0%, rgba(8,18,72,.92) 100%), url('${post.cover}');"`
+    : '';
+
+  // Related: same category, excluding current, max 3
+  const related = posts
+    .filter(p => p.id !== post.id && p.category === post.category && p.published !== false)
+    .slice(0, 3);
+
+  let html = `
+    <div class="article-hero ${hasCover ? 'with-cover' : ''}" ${heroStyle}>
+      <div class="breadcrumb"><a href="index.html">Home</a> / <a href="blog.html">Blog</a> / <span>${post.category}</span></div>
+      <div class="article-tag-hero">${post.category}</div>
+      <h1>${post.title}</h1>
+      <div class="article-meta">
+        <span>${fmtDate(post.date)}</span>
+        <span>${post.readTime} min read</span>
+        <span>By ${post.author || 'Surplusviews Team'}</span>
+      </div>
+    </div>
+
+    <article class="article-wrap">
+      <div class="article-excerpt">${post.excerpt}</div>
+      <div class="article-body">${post.body || '<p><em>Full article content coming soon.</em></p>'}</div>
+      <div class="article-footer-strip">
+        <div class="article-author">Written by <strong>${post.author || 'Surplusviews Team'}</strong></div>
+        <a href="blog.html" class="btn btn-outline">← Back to all articles</a>
+      </div>
+    </article>
+  `;
+
+  if (related.length) {
+    html += `<section class="related-wrap">
+      <h3>Related Articles</h3>
+      <div class="related-grid">
+        ${related.map(p => {
+          const icon = CAT_ICONS[p.category] || CAT_ICONS.default;
+          const thumb = p.cover
+            ? `<div class="related-thumb" style="background-image:url('${p.cover}')"></div>`
+            : `<div class="related-thumb">${icon}</div>`;
+          return `<a href="article.html?id=${p.id}" class="related-card">
+            ${thumb}
+            <div class="related-body">
+              <div class="related-tag">${p.category}</div>
+              <h4>${p.title}</h4>
+              <div class="meta">${fmtDate(p.date)} · ${p.readTime} min</div>
+            </div>
+          </a>`;
+        }).join('')}
+      </div>
+    </section>`;
+  }
+
+  document.getElementById('articleRoot').innerHTML = html;
+}
+
+renderArticle();
+</script>
+
+</body>
+</html>

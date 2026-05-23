@@ -7,33 +7,28 @@
   <link rel="stylesheet" href="style.css" />
   <style>
     .page-hero {
-      background: var(--navy);
-      padding: 5rem 5% 4rem;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(8, 18, 72, 0.86) 0%,
+          rgba(8, 18, 72, 0.78) 100%
+        ),
+        url('images/hero/blog.jpg') center/cover no-repeat;
+      background-color: var(--navy);
+      padding: 6rem 5% 5rem;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
-    .page-hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        -45deg,
-        rgba(240,192,64,.03) 0px,
-        rgba(240,192,64,.03) 1px,
-        transparent 1px,
-        transparent 40px
-      );
-      pointer-events: none;
-    }
+    .page-hero > * { position: relative; z-index: 2; }
     .page-hero h1 { color: var(--white); font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: .8rem; }
-    .page-hero p  { color: rgba(255,255,255,.7); max-width: 540px; margin: 0 auto; font-size: 1rem; }
+    .page-hero p  { color: rgba(255,255,255,.85); max-width: 560px; margin: 0 auto; font-size: 1.05rem; }
     .breadcrumb {
       display: flex;
       justify-content: center;
       gap: .4rem;
       font-size: .8rem;
-      color: rgba(255,255,255,.45);
+      color: rgba(255,255,255,.6);
       margin-bottom: 1.5rem;
     }
     .breadcrumb a { color: var(--gold); }
@@ -155,11 +150,28 @@
       justify-content: center;
       font-size: 3.5rem;
       position: relative;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      overflow: hidden;
     }
+    .article-thumb.has-image { background-color: var(--navy); }
+    .article-thumb.has-image .thumb-icon-fallback { display: none; }
     .thumb-career  { background: linear-gradient(135deg, #0d1f6e 0%, #1a3a9e 100%); }
     .thumb-research{ background: linear-gradient(135deg, #1a3a60 0%, #0d3060 100%); }
     .thumb-market  { background: linear-gradient(135deg, #2d1a5e 0%, #0d1f6e 100%); }
     .thumb-policy  { background: linear-gradient(135deg, #0d4060 0%, #0d2050 100%); }
+
+    /* Featured post cover image */
+    .featured-cover {
+      width: 100%;
+      aspect-ratio: 16/10;
+      border-radius: var(--r-lg);
+      background-size: cover;
+      background-position: center;
+      background-color: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+    }
 
     .article-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
 
@@ -364,12 +376,17 @@ function renderFeatured() {
     <div class="blog-meta">${fmtDate(featured.date)} &nbsp;·&nbsp; ${featured.category} &nbsp;·&nbsp; ${featured.readTime} min read</div>
     <h2>${featured.title}</h2>
     <p>${featured.excerpt}</p>
-    <a href="#" class="btn btn-primary">Read Full Article →</a>`;
+    <a href="article.html?id=${featured.id}" class="btn btn-primary">Read Full Article →</a>`;
 
-  document.getElementById('featuredPostVisual').innerHTML = `
-    <span class="featured-visual-icon">${icon}</span>
-    <div class="featured-visual-title">${featured.category}</div>
-    <p>${featured.excerpt.slice(0,90)}…</p>`;
+  const visual = document.getElementById('featuredPostVisual');
+  if (featured.cover) {
+    visual.innerHTML = `<div class="featured-cover" style="background-image:url('${featured.cover}')"></div>`;
+  } else {
+    visual.innerHTML = `
+      <span class="featured-visual-icon">${icon}</span>
+      <div class="featured-visual-title">${featured.category}</div>
+      <p>${featured.excerpt.slice(0,90)}…</p>`;
+  }
 }
 
 function renderGrid() {
@@ -386,19 +403,23 @@ function renderGrid() {
     const icon  = CAT_ICONS[p.category] || CAT_ICONS.default;
     const cls   = CAT_CLASSES[p.category] || CAT_CLASSES.default;
     const delay = ['','delay-1','delay-2'][i % 3];
+    const hasCover = !!p.cover;
+    const thumbStyle = hasCover ? `style="background-image:url('${p.cover}')"` : '';
+    const thumbClass = hasCover ? 'has-image' : cls;
+    const thumbContent = hasCover ? '' : icon;
     return `
-      <div class="article-card fade-up ${delay}">
-        <div class="article-thumb ${cls}">${icon}</div>
+      <a href="article.html?id=${p.id}" class="article-card fade-up ${delay}" style="text-decoration:none;color:inherit;">
+        <div class="article-thumb ${thumbClass}" ${thumbStyle}>${thumbContent}</div>
         <div class="article-body">
           <div class="article-tag">${p.category}</div>
           <h3>${p.title}</h3>
           <p>${p.excerpt}</p>
           <div class="article-footer">
             <span>${fmtDate(p.date)} · ${p.readTime} min</span>
-            <a href="#" class="read-link">Read →</a>
+            <span class="read-link">Read →</span>
           </div>
         </div>
-      </div>`;
+      </a>`;
   }).join('');
 }
 

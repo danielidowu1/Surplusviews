@@ -7,77 +7,70 @@
   <link rel="stylesheet" href="style.css" />
   <style>
     .page-hero {
-      background: var(--navy);
-      padding: 4.5rem 5% 3.5rem;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(8, 18, 72, 0.82) 0%,
+          rgba(8, 18, 72, 0.92) 100%
+        ),
+        url('images/hero/order.jpg') center/cover no-repeat;
+      background-color: var(--navy);
+      padding: 6rem 5% 5rem;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
-    .page-hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        -45deg,
-        rgba(240,192,64,.03) 0px,
-        rgba(240,192,64,.03) 1px,
-        transparent 1px,
-        transparent 40px
-      );
-      pointer-events: none;
-    }
+    .page-hero > * { position: relative; z-index: 2; }
     .page-hero h1 { color: var(--white); font-size: clamp(2rem, 4.5vw, 3.2rem); margin-bottom: .8rem; }
-    .page-hero p  { color: rgba(255,255,255,.7); max-width: 540px; margin: 0 auto; font-size: 1rem; }
+    .page-hero p  { color: rgba(255,255,255,.85); max-width: 560px; margin: 0 auto; font-size: 1.05rem; }
     .breadcrumb {
       display: flex;
       justify-content: center;
       gap: .4rem;
       font-size: .8rem;
-      color: rgba(255,255,255,.45);
+      color: rgba(255,255,255,.6);
       margin-bottom: 1.5rem;
     }
     .breadcrumb a { color: var(--gold); }
 
     /* LAYOUT */
     .intake-layout {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 3rem;
-      max-width: 1100px;
+      max-width: 880px;
       margin: 0 auto;
     }
 
-    /* SIDEBAR */
-    .intake-sidebar { position: sticky; top: 90px; align-self: start; }
-
-    .sidebar-card {
+    /* WHY FILL — now below the form */
+    .why-fill {
       background: var(--navy);
       border-radius: var(--r-lg);
-      padding: 2rem 1.8rem;
+      padding: 2.5rem 2rem;
+      color: var(--white);
+      margin-top: 3rem;
+    }
+    .why-fill h3 {
+      font-size: 1.4rem;
       color: var(--white);
       margin-bottom: 1.5rem;
+      text-align: center;
     }
-    .sidebar-card h3 {
-      font-size: 1.1rem;
-      color: var(--white);
-      margin-bottom: 1.2rem;
+    .why-fill-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem 2rem;
     }
-    .sidebar-item {
+    .why-fill-item {
       display: flex;
       align-items: flex-start;
       gap: .75rem;
-      padding: .7rem 0;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      font-size: .88rem;
-      color: rgba(255,255,255,.75);
+      font-size: .9rem;
+      color: rgba(255,255,255,.85);
+      line-height: 1.55;
     }
-    .sidebar-item:last-child { border-bottom: none; }
-    .sidebar-item-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
-
-    .sidebar-contact h3 { color: var(--navy); margin-bottom: 1rem; }
-    .sidebar-contact { background: var(--cream); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.8rem; }
-    .contact-row { display: flex; align-items: center; gap: .6rem; font-size: .87rem; color: var(--muted); margin-bottom: .75rem; }
-    .contact-row:last-child { margin-bottom: 0; }
+    .why-fill-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
 
     /* FORM WRAPPER */
     .form-wrapper {
@@ -101,6 +94,15 @@
       font-size: .82rem;
       font-weight: 500;
       color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+      transition: color .15s, transform .15s;
+      outline: none;
+    }
+    .step:hover { color: var(--navy); }
+    .step:hover .step-num { transform: scale(1.08); }
+    .step:focus-visible .step-num {
+      box-shadow: 0 0 0 3px rgba(13,31,110,.2);
     }
     .step-num {
       width: 28px; height: 28px;
@@ -112,6 +114,7 @@
       font-size: .78rem;
       font-weight: 700;
       flex-shrink: 0;
+      transition: background .2s, color .2s, transform .15s;
     }
     .step.done .step-num { background: var(--gold); color: var(--navy); }
     .step.active .step-num { background: var(--navy); color: var(--white); }
@@ -210,17 +213,6 @@
       gap: 1.2rem;
     }
 
-    /* BUDGET SLIDER */
-    .budget-display {
-      text-align: center;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: .5rem;
-    }
-    .budget-range { display: flex; justify-content: space-between; font-size: .78rem; color: var(--muted); margin-top: .4rem; }
-
     /* PRIORITY */
     .priority-opts { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; }
     .priority-opt { position: relative; }
@@ -276,9 +268,11 @@
     .req-note { font-size: .8rem; color: var(--muted); margin-bottom: 2rem; }
 
     @media (max-width: 900px) {
-      .intake-layout { grid-template-columns: 1fr; }
-      .intake-sidebar { position: static; }
       .form-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .form-wrapper { padding: 1.5rem; }
+      .why-fill { padding: 2rem 1.4rem; }
     }
   </style>
 </head>
@@ -336,63 +330,27 @@ document.querySelectorAll('.nav-drawer a').forEach(function(a) {
 <section class="section">
   <div class="intake-layout">
 
-    <!-- SIDEBAR -->
-    <aside class="intake-sidebar">
-      <div class="sidebar-card">
-        <h3>Why Fill This Form?</h3>
-        <div class="sidebar-item">
-          <span class="sidebar-item-icon">⚡</span>
-          <span>Get a response within <strong>24 hours</strong> — often much sooner.</span>
-        </div>
-        <div class="sidebar-item">
-          <span class="sidebar-item-icon">🎯</span>
-          <span>We match you with the right expert for your specific need.</span>
-        </div>
-        <div class="sidebar-item">
-          <span class="sidebar-item-icon">💰</span>
-          <span>Receive a transparent quote — no hidden charges.</span>
-        </div>
-        <div class="sidebar-item">
-          <span class="sidebar-item-icon">🔒</span>
-          <span>All information is kept strictly confidential.</span>
-        </div>
-        <div class="sidebar-item">
-          <span class="sidebar-item-icon">🤝</span>
-          <span>No obligation — just an honest conversation about your needs.</span>
-        </div>
-      </div>
-
-      <div class="sidebar-contact">
-        <h3>Prefer to Talk?</h3>
-        <div class="contact-row"><span>📞</span><span>08033912203</span></div>
-        <div class="contact-row"><span>📞</span><span>0916 490 7691</span></div>
-        <div class="contact-row"><span>✉️</span><span>surplusviewsglobal@gmail.com</span></div>
-        <div class="contact-row"><span>💬</span><span>WhatsApp: 0803 391 2203</span></div>
-        <div class="contact-row"><span>📍</span><span>Lagos, Nigeria</span></div>
-      </div>
-    </aside>
-
     <!-- FORM -->
     <div class="form-wrapper fade-up">
 
       <!-- STEP INDICATOR -->
       <div class="steps">
-        <div class="step active">
+        <div class="step active" onclick="scrollToSection(1)" role="button" tabindex="0">
           <div class="step-num">1</div>
           <span>About You</span>
         </div>
         <div class="step-line"></div>
-        <div class="step">
+        <div class="step" onclick="scrollToSection(2)" role="button" tabindex="0">
           <div class="step-num">2</div>
           <span>Your Need</span>
         </div>
         <div class="step-line"></div>
-        <div class="step">
+        <div class="step" onclick="scrollToSection(3)" role="button" tabindex="0">
           <div class="step-num">3</div>
           <span>Details</span>
         </div>
         <div class="step-line"></div>
-        <div class="step">
+        <div class="step" onclick="scrollToSection(4)" role="button" tabindex="0">
           <div class="step-num">4</div>
           <span>Submit</span>
         </div>
@@ -403,7 +361,7 @@ document.querySelectorAll('.nav-drawer a').forEach(function(a) {
       <form id="intakeForm" onsubmit="handleSubmit(event)" novalidate>
 
         <!-- SECTION 1: ABOUT YOU -->
-        <div class="form-section-title">1. About You</div>
+        <div class="form-section-title" id="form-section-1">1. About You</div>
         <p class="form-section-sub">Let us know who you are so we can personalise our support.</p>
 
         <div class="form-row">
@@ -452,7 +410,7 @@ document.querySelectorAll('.nav-drawer a').forEach(function(a) {
         <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border);" />
 
         <!-- SECTION 2: SERVICE NEEDED -->
-        <div class="form-section-title">2. Which Service Do You Need?</div>
+        <div class="form-section-title" id="form-section-2">2. Which Service Do You Need?</div>
         <p class="form-section-sub">Select the primary category that best describes what you're looking for.</p>
 
         <div class="service-cards">
@@ -509,7 +467,7 @@ document.querySelectorAll('.nav-drawer a').forEach(function(a) {
         <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border);" />
 
         <!-- SECTION 3: CONTENT / DELIVERABLE DETAILS -->
-        <div class="form-section-title">3. Tell Us What You Need Written or Done</div>
+        <div class="form-section-title" id="form-section-3">3. Tell Us What You Need Written or Done</div>
         <p class="form-section-sub">The more detail you share, the better we can match you with the right expert and give you an accurate quote.</p>
 
         <div class="form-group">
@@ -601,8 +559,8 @@ document.querySelectorAll('.nav-drawer a').forEach(function(a) {
 
         <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border);" />
 
-        <!-- SECTION 4: TIMELINE & BUDGET -->
-        <div class="form-section-title">4. Timeline &amp; Preferences</div>
+        <!-- SECTION 4: TIMELINE & SUBMIT -->
+        <div class="form-section-title" id="form-section-4">4. Timeline &amp; Preferences</div>
         <p class="form-section-sub">Help us plan the right resources and timeline for you.</p>
 
         <div class="form-row">
@@ -646,13 +604,6 @@ document.querySelectorAll('.nav-drawer a').forEach(function(a) {
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="budget">Approximate Budget (₦)</label>
-          <div class="budget-display" id="budgetDisplay">₦50,000</div>
-          <input type="range" id="budget" name="budget" min="5000" max="500000" step="5000" value="50000"
-            oninput="document.getElementById('budgetDisplay').textContent = '₦' + parseInt(this.value).toLocaleString()" />
-          <div class="budget-range"><span>₦5,000</span><span>₦500,000+</span></div>
-        </div>
 
         <div class="form-group">
           <label for="hearAbout">How did you hear about us?</label>
@@ -698,6 +649,34 @@ document.querySelectorAll('.nav-drawer a').forEach(function(a) {
       </div>
 
     </div>
+
+    <!-- WHY FILL — now below the form -->
+    <div class="why-fill fade-up">
+      <h3>Why Fill This Form?</h3>
+      <div class="why-fill-grid">
+        <div class="why-fill-item">
+          <span class="why-fill-icon">⚡</span>
+          <span>Get a response within <strong>24 hours</strong> — often much sooner.</span>
+        </div>
+        <div class="why-fill-item">
+          <span class="why-fill-icon">🎯</span>
+          <span>We match you with the right expert for your specific need.</span>
+        </div>
+        <div class="why-fill-item">
+          <span class="why-fill-icon">💰</span>
+          <span>Receive a transparent quote — no hidden charges.</span>
+        </div>
+        <div class="why-fill-item">
+          <span class="why-fill-icon">🔒</span>
+          <span>All information is kept strictly confidential.</span>
+        </div>
+        <div class="why-fill-item">
+          <span class="why-fill-icon">🤝</span>
+          <span>No obligation — just an honest conversation about your needs.</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -746,6 +725,51 @@ document.querySelectorAll('.nav-drawer a').forEach(function(a) {
     success.classList.add('show');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  /* Click a step circle to jump to that form section */
+  function scrollToSection(n) {
+    const target = document.getElementById('form-section-' + n);
+    if (!target) return;
+    // Account for the sticky nav (68px) plus a little breathing room
+    const navOffset = 90;
+    const y = target.getBoundingClientRect().top + window.pageYOffset - navOffset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+    setActiveStep(n);
+  }
+
+  function setActiveStep(n) {
+    document.querySelectorAll('.steps .step').forEach((el, i) => {
+      el.classList.toggle('active', i + 1 === n);
+      el.classList.toggle('done',   i + 1 <  n);
+    });
+  }
+
+  /* Allow keyboard activation of step circles (Enter / Space) */
+  document.querySelectorAll('.steps .step').forEach((el, i) => {
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        scrollToSection(i + 1);
+      }
+    });
+  });
+
+  /* Auto-update which step is active as the user scrolls through the form */
+  const sections = [1, 2, 3, 4].map(n => document.getElementById('form-section-' + n)).filter(Boolean);
+  function syncStepOnScroll() {
+    if (!sections.length) return;
+    const trigger = window.pageYOffset + 140; // line just below sticky nav
+    let active = 1;
+    sections.forEach((s, i) => {
+      if (s.offsetTop <= trigger) active = i + 1;
+    });
+    setActiveStep(active);
+  }
+  let scrollTimer;
+  window.addEventListener('scroll', () => {
+    if (scrollTimer) cancelAnimationFrame(scrollTimer);
+    scrollTimer = requestAnimationFrame(syncStepOnScroll);
+  }, { passive: true });
 </script>
 
 </body>
