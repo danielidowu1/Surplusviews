@@ -485,6 +485,93 @@
 
     /* CONFIRM DIALOG */
     .confirm-msg { font-size: .95rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
+
+    /* ── COVER IMAGE UPLOADER ── */
+    .cover-uploader {
+      border: 2px dashed var(--border);
+      border-radius: var(--r);
+      padding: 1.2rem;
+      text-align: center;
+      background: var(--cream);
+      transition: border-color .2s, background .2s;
+    }
+    .cover-uploader.has-image { padding: 0; border-style: solid; }
+    .cover-preview {
+      width: 100%;
+      aspect-ratio: 16/9;
+      max-height: 280px;
+      background-size: cover;
+      background-position: center;
+      background-color: var(--cream);
+      border-radius: calc(var(--r) - 2px);
+      position: relative;
+      overflow: hidden;
+    }
+    .cover-uploader:not(.has-image) .cover-preview {
+      aspect-ratio: auto;
+      min-height: 120px;
+      max-height: 140px;
+    }
+    .cover-preview-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      padding: 1.5rem .5rem;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+    .cover-preview-empty .icon { font-size: 2rem; }
+    .cover-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-top: .8rem;
+      align-items: center;
+    }
+    .cover-actions .file-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      padding: .55rem 1rem;
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 6px;
+      font-size: .82rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+    .cover-actions .file-btn:hover { background: var(--navy-deep); }
+    .cover-actions .file-btn.secondary { background: var(--white); color: var(--navy); border: 1.5px solid var(--border); }
+    .cover-actions .file-btn.secondary:hover { border-color: var(--navy); }
+    .cover-actions .file-btn.danger { background: transparent; color: var(--danger); border: 1.5px solid transparent; }
+    .cover-actions .file-btn.danger:hover { border-color: var(--danger); }
+    .cover-url-input {
+      flex: 1 1 200px;
+      min-width: 0;
+      padding: .55rem .8rem;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      font-size: .85rem;
+      font-family: inherit;
+      outline: none;
+    }
+    .cover-url-input:focus { border-color: var(--navy); }
+    .cover-hint {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: .5rem;
+      line-height: 1.5;
+    }
+    .cover-hint code {
+      background: var(--cream);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: .9em;
+    }
   </style>
 </head>
 <body>
@@ -688,6 +775,31 @@
       <div class="form-group">
         <label>Post Title *</label>
         <input type="text" id="postTitle" placeholder="Enter a compelling title..." />
+      </div>
+
+      <div class="form-group">
+        <label>Cover Image (Article Header)</label>
+        <div class="cover-uploader" id="coverUploader">
+          <div class="cover-preview" id="coverPreview">
+            <div class="cover-preview-empty" id="coverPreviewEmpty">
+              <div class="icon">🖼️</div>
+              <div>No cover image yet</div>
+            </div>
+          </div>
+          <div class="cover-actions">
+            <label class="file-btn">
+              📤 Upload Image
+              <input type="file" id="coverFileInput" accept="image/*" style="display:none" onchange="handleCoverFileUpload(event)" />
+            </label>
+            <input type="url" class="cover-url-input" id="coverUrlInput" placeholder="...or paste image URL (recommended)" />
+            <button type="button" class="file-btn secondary" onclick="setCoverFromUrl()">Use URL</button>
+            <button type="button" class="file-btn danger" id="coverRemoveBtn" onclick="removeCoverImage()" style="display:none">✕ Remove</button>
+          </div>
+          <div class="cover-hint">
+            <strong>Recommended:</strong> upload your image file to your repo at <code>images/blog/your-image.jpg</code>, then paste the URL <code>images/blog/your-image.jpg</code> here. This way all visitors see the image. Uploaded files are stored only in this browser (preview only).
+          </div>
+        </div>
+        <input type="hidden" id="postCover" value="" />
       </div>
 
       <div class="form-row">
@@ -1003,6 +1115,9 @@ function openPostModal(post) {
   document.getElementById('postBody').innerHTML  = post ? (post.body||'') : '';
   document.getElementById('postPublished').checked = post ? !!post.published : true;
   document.getElementById('postFeatured').checked  = post ? !!post.featured : false;
+  document.getElementById('postCover').value     = post ? (post.cover||'') : '';
+  document.getElementById('coverUrlInput').value = '';
+  renderCoverPreview(post ? (post.cover||'') : '');
   document.getElementById('postModal').classList.add('open');
 }
 
@@ -1034,6 +1149,7 @@ function savePost() {
     author:    document.getElementById('postAuthor').value.trim() || 'Surplusviews Team',
     excerpt,
     body:      document.getElementById('postBody').innerHTML,
+    cover:     document.getElementById('postCover').value || '',
     published: document.getElementById('postPublished').checked,
     featured:  document.getElementById('postFeatured').checked
   };
@@ -1164,6 +1280,61 @@ function deleteReview(id) {
 function fmt(cmd) { document.execCommand(cmd, false, null); document.getElementById('postBody').focus(); }
 function fmtH2()  { document.execCommand('formatBlock', false, 'h2'); document.getElementById('postBody').focus(); }
 function fmtH3()  { document.execCommand('formatBlock', false, 'h3'); document.getElementById('postBody').focus(); }
+
+/* ════════════════════════════════════════
+   COVER IMAGE
+════════════════════════════════════════ */
+function renderCoverPreview(src) {
+  const preview = document.getElementById('coverPreview');
+  const empty   = document.getElementById('coverPreviewEmpty');
+  const wrap    = document.getElementById('coverUploader');
+  const removeBtn = document.getElementById('coverRemoveBtn');
+  if (src) {
+    preview.style.backgroundImage = `url('${src}')`;
+    if (empty) empty.style.display = 'none';
+    wrap.classList.add('has-image');
+    removeBtn.style.display = 'inline-flex';
+  } else {
+    preview.style.backgroundImage = '';
+    if (empty) empty.style.display = 'flex';
+    wrap.classList.remove('has-image');
+    removeBtn.style.display = 'none';
+  }
+}
+
+function setCoverFromUrl() {
+  const url = document.getElementById('coverUrlInput').value.trim();
+  if (!url) { toast('Please paste an image URL first', '⚠️'); return; }
+  document.getElementById('postCover').value = url;
+  renderCoverPreview(url);
+  document.getElementById('coverUrlInput').value = '';
+  toast('Cover image set', '✅');
+}
+
+function removeCoverImage() {
+  document.getElementById('postCover').value = '';
+  document.getElementById('coverFileInput').value = '';
+  renderCoverPreview('');
+}
+
+function handleCoverFileUpload(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { toast('Please choose an image file', '⚠️'); return; }
+  // Warn on large files — base64 in localStorage gets heavy fast.
+  if (file.size > 800 * 1024) {
+    toast('Large image (>800KB). Consider hosting it in /images/blog/ instead.', '⚠️');
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const dataUrl = e.target.result;
+    document.getElementById('postCover').value = dataUrl;
+    renderCoverPreview(dataUrl);
+    toast('Cover image loaded (preview only — see hint)', '🖼️');
+  };
+  reader.onerror = function() { toast('Could not read the file', '⚠️'); };
+  reader.readAsDataURL(file);
+}
 
 /* ════════════════════════════════════════
    CONFIRM DIALOG
