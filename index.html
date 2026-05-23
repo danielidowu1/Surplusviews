@@ -208,29 +208,46 @@
     /* ── SERVICES STRIP ── */
     .services-strip {
       background: var(--gold);
-      padding: 1.2rem 5%;
       display: flex;
-      align-items: center;
-      gap: 2.5rem;
-      overflow: hidden;
+      align-items: stretch;
       position: relative;
       z-index: 2;
       margin-bottom: 0;
+      overflow: hidden;
     }
 
     .strip-label {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      padding: 1.2rem 1.4rem 1.2rem 5%;
+      background: var(--gold);
       font-weight: 700;
       font-size: .8rem;
       letter-spacing: .1em;
       text-transform: uppercase;
       color: var(--navy);
       white-space: nowrap;
+      position: relative;
+      z-index: 2;
+      border-right: 2px solid rgba(13, 31, 110, .18);
+      box-shadow: 4px 0 12px rgba(13, 31, 110, .08);
+    }
+
+    .strip-marquee {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 1.2rem 5% 1.2rem 1.4rem;
+      min-width: 0;
     }
 
     .strip-items {
       display: flex;
       gap: 2.5rem;
       animation: scrollStrip 20s linear infinite;
+      flex-shrink: 0;
     }
 
     .strip-item {
@@ -246,6 +263,15 @@
     @keyframes scrollStrip {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
+    }
+
+    @media (max-width: 620px) {
+      .strip-label {
+        padding: .9rem 1rem .9rem 1rem;
+        font-size: .72rem;
+      }
+      .strip-marquee { padding: .9rem 1rem .9rem 1rem; }
+      .strip-item { font-size: .8rem; }
     }
 
     /* ── SERVICES GRID ── */
